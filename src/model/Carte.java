@@ -5,15 +5,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Carte {
     private Case[][] grille;
     //private String type;
-    private int largeur,hauteur;
+    private static int largeur;
+    private static int hauteur;
 
     public Carte(int largeur,int hauteur){
-        this.largeur = largeur;
-        this.hauteur = hauteur;
+        Carte.largeur = largeur;
+        Carte.hauteur = hauteur;
         this.grille = new Case[hauteur][largeur];
         initialiserCarteVide();
     }
@@ -25,7 +27,16 @@ public class Carte {
             }
         }
     }
+    private void genererCarteAleatoire(char[] contenue) {
+        Random random= new Random();
+        for (int y = 0; y < hauteur; y++) {
+            for (int x = 0; x < largeur; x++) {
+                char symbole= contenue[random.nextInt(contenue.length)];
+                grille[y][x]=new Case(x,y,symbole);
+            }
+        }
 
+    }
     public void chargerDepuisFichier(String cheminFichier) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(cheminFichier))) {
             String ligne;
@@ -81,17 +92,15 @@ public class Carte {
     }
 
     //afficher la carte
-    public void afficherCarte() {
-        for (int i = 0; i < hauteur; i++) {
-            for (int j = 0; j < largeur; j++) {
-                System.out.print(grille[i][j] + ".");
-            }
-            System.out.println();
-        }
+    public void afficherCarte(char[] contenu) {
+        genererCarteAleatoire(contenu);
+
     }
 
 
-    private char getContenuCase(int i, int i1) {
+
+
+    public char getContenuCase(int i, int i1) {
           if ( i >= 0 && i < largeur && i1 >=0 && i1 < hauteur ){
               return grille[i][i1].getContenu();
           }
@@ -99,12 +108,20 @@ public class Carte {
     }
 
 
-    private List<int[]> obtenirCasesAdjacentes(int x, int y) {
-        List<int[]>  casesAdjaventes = new ArrayList<>();
+    public static List<int[]> obtenirCasesAdjacentes(int x, int y) {
+        List<int[]>  casesAdjacentes = new ArrayList<>();
 
 
         // on va verifier lescases adjacentes dans les 4 directions
+
+        if (x > 0) casesAdjacentes.add(new int[]{x - 1, y}); // Case à gauche
+        if (x < largeur - 1) casesAdjacentes.add(new int[]{x + 1, y}); // Case à droite
+        if (y > 0) casesAdjacentes.add(new int[]{x, y - 1}); // Case en haut
+        if (y < hauteur - 1) casesAdjacentes.add(new int[]{x, y + 1}); // Case en bas
+
+        return casesAdjacentes; // Retourne la liste des cases adjacentes valides
+    }
     }
 
 
-}
+

@@ -1,6 +1,6 @@
 package model;
 
-public abstract class EtatAnimal {
+public abstract class EtatAnimal  {
     protected Animal animal;
 
     public  void setAnimal(Animal animal) {
@@ -14,7 +14,7 @@ public abstract class EtatAnimal {
 
     public abstract void recevoirCoup();
 
-    public abstract void agir();
+    public abstract void agir(Carte carte); // l'algorithme principale de comportement ,depend de l'etat
 
 
 

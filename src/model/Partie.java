@@ -9,7 +9,7 @@ public abstract class Partie {
     private boolean estEnCours;
     private String statut;// statut de la partie
     private Personnage personnage;
-    private int tours; // compter tours 8/12!
+    private int tours; // compter tours
 
 
     public Partie() {
@@ -20,7 +20,15 @@ public abstract class Partie {
         this.statut = "En cours ";
         initialiserPartie();
     }
-
+    public void ajouterPersonnage(String nom, int x, int y) {
+        if (carte.getCase(x, y).getContenu() == '.') { // Vérifiez si la case est vide
+            Personnage personnage = new Personnage(nom, x, y);
+            this.personnage=personnage;
+            carte.setCaseContenu(x, y, '@'); // Placez le personnage sur la carte
+        } else {
+            System.out.println("Impossible de placer le personnage : case occupée.");
+        }
+    }
 
     public abstract void initialiserPartie();
 
@@ -112,7 +120,7 @@ public abstract class Partie {
 
     // Méthode pour afficher l'état actuel de la partie (par exemple, carte, objets, animaux)
     public void afficherEtat() {
-        carte.afficherCarte();
+        //carte.afficherCarte();
         System.out.println("Animaux : " + animaux.size());
         System.out.println("Objets : " + objets.size());
         System.out.println("Statut : " + statut);

@@ -1,12 +1,16 @@
 package model;
 
 public class EtatARassasie extends EtatAnimal {
-    public EtatARassasie(Animal animal) {
-        super(animal);
+    private static EtatARassasie instance ;
+    private  EtatARassasie() {}
+
+    public static EtatARassasie getInstance() {
+        if (instance == null) {
+            instance = new EtatARassasie();
+        }
+        return instance;
     }
 
-    public static EtatAnimal getInstance() {
-    }
 
     @Override
     public void seNourrir() {
@@ -24,7 +28,7 @@ public class EtatARassasie extends EtatAnimal {
     }
 
     @Override
-    public void agir() {
+    public void agir(Carte carte) {
 
     }
 

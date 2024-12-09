@@ -4,12 +4,17 @@ public class Ecureuil extends Animal {
     // Constructeur avec position
     public Ecureuil(int positionX, int positionY) {
         super("Écureuil", 'E', positionX, positionY);
-        setEtat(EtatAffame.getInstance(this)); // Par défaut, un écureuil commence affamé
+        setEtat(EtatAffame.getInstance()); // Par défaut, un écureuil commence affamé
     }
 
 
     public String afficherEcureuil() {
         return "Nom: " + getNom() + ", Position: (" + getX() + ", " + getY() + ")";
+    }
+
+    @Override
+    public void afficher() {
+        System.out.println(afficherEcureuil());
     }
 
     @Override
@@ -31,9 +36,9 @@ public class Ecureuil extends Animal {
     }
 
     @Override
-    public void agir() {
+    public void agir(Carte carte) {
         // L'écureuil agit selon son état actuel (affamé, rassasié, etc.)
-        etat.agir();
+        etat.agir(carte);
     }
 
 }

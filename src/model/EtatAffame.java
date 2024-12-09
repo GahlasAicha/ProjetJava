@@ -3,13 +3,19 @@ package model;
 import java.util.List;
 import java.util.Random;
 
-/// desin pattern singleton et strategie pour chaque etat
+
+
+/// desin pattern singleton pour chaque  chaque etat
 public class EtatAffame extends EtatAnimal {
      private static EtatAffame instance; // singleton
 
 
+
+
      // Constructeur privé pour empêcher l'instanciation directe
-     private  EtatAffame() {}
+     private  EtatAffame( ) {
+
+     }
 
      // Méthode pour obtenir l'instance unique
      public static EtatAffame getInstance() {
@@ -21,11 +27,15 @@ public class EtatAffame extends EtatAnimal {
 
      @Override
      public void seNourrir() {
-         System.out.println(animal.getNom() + "se nourrit et devient rassasié ");
-         animal.setEtat(EtatARassasie.getInstance());
+         if (animal == null) {
+             throw new IllegalStateException("L'animal associé à l'état est null.");
+         }
+         System.out.println(animal.getNom() + " se nourrit et devient rassasié.");
+         animal.setEtat(EtatARassasie.getInstance()); // Passe à l'état rassasié
      }
 
-     @Override
+
+    @Override
      public void apprivoiser() {
          System.out.println(animal.getNom() + " ne peut pas être apprivoisé en étant affamé.");
      }
@@ -37,20 +47,20 @@ public class EtatAffame extends EtatAnimal {
 
 
      @Override
-     public void agir() {
+     public void agir(Carte carte) {
          System.out.println(animal.getNom() + " cherche de la nourriture.");
 
-         // Liste des nourritures à chercher dans l'ordre de priorité
+         // Liste des nourritures à chercher : Gland, Champignon, Banane
          char[] nourritures = {'G', 'C', 'B'}; // Gland, Champignon, Banane
 
-         // Rechercher de la nourriture autour de l'écureuil
-         List<int[]> casesAdjacentes = obtenirCasesAdjacentes(animal.getX(), animal.getY());
+         // Recherche de la nourriture autour de l'animal
+         List<int[]> casesAdjacentes = Carte.obtenirCasesAdjacentes(animal.getX(), animal.getY());
          for (char nourriture : nourritures) {
              for (int[] caseAdj : casesAdjacentes) {
-                 if (getContenuCase(caseAdj[0], caseAdj[1]) == nourriture) {
+                 if (carte.getContenuCase(caseAdj[0], caseAdj[1]) == nourriture) {
                      System.out.println(animal.getNom() + " mange de la nourriture et devient rassasié.");
                      deplacerAnimal(animal, caseAdj[0], caseAdj[1]);
-                     animal.setEtat(EtatARassasie.getInstance(animal));
+                     animal.setEtat(EtatARassasie.getInstance()); // Passer à l'état rassasié
                      return;
                  }
              }
@@ -62,10 +72,12 @@ public class EtatAffame extends EtatAnimal {
          deplacerAnimal(animal, nouvellePosition[0], nouvellePosition[1]);
      }
 
+    // Méthode pour choisir une case aléatoire parmi les cases adjacentes
     private int[] choisirCaseAleatoire(List<int[]> casesAdjacentes) {
-           Random random = new Random();
-           return casesAdjacentes.get(random.nextInt(casesAdjacentes.size()));
-     }
+        Random random = new Random();
+        return casesAdjacentes.get(random.nextInt(casesAdjacentes.size()));
+    }
+
 
     private void deplacerAnimal(Animal animal, int i, int i1) {
         animal.setX(i); // Met à jour la position x de l'animal

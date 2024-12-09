@@ -5,6 +5,7 @@ import java.io.IOException;
 public class PartieJungle extends Partie{
     private Singe[][] singes ;
     private Objet[][] objets;
+    private FabriqueElementsJungle elements= new FabriqueElementsJungle();
 
     public PartieJungle() {
         super();

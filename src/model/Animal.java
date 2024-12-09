@@ -13,8 +13,8 @@ public  abstract class Animal {
         this.symbole = symbole;
         this.x = x;
         this.y = y;
-        this.etat = EtatAffame.getInstance();// par defaut l'animal est affamé
-        this.etat.setAnimal(this); // Associe l'animal à l'état courant
+        this.setEtat(EtatAffame.getInstance());// par defaut l'animal est affamé
+
     }
 
 
@@ -35,8 +35,8 @@ public  abstract class Animal {
         etat.recevoirCoup();
     }
 
-    public void agir() {
-        etat.agir();
+    public void agir(Carte carte) {
+        etat.agir(carte);
     }
 
 
@@ -78,10 +78,14 @@ public  abstract class Animal {
     }
 
 
-    public void setEtat(EtatAnimal nouvelEtat) {
-        this.etat = nouvelEtat;
-        this.etat.setAnimal(this); // Met à jour l'association avec l'animal
+    public void setEtat(EtatAnimal etat) {
+        if (etat == null) {
+            throw new IllegalArgumentException("L'état ne peut pas être null.");
+        }
+        this.etat = etat;
+        this.etat.setAnimal(this); // Associe cet animal à l'état
     }
+
 
 
 

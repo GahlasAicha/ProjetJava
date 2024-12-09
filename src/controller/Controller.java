@@ -1,8 +1,6 @@
 package controller;
 
-import model.Partie;
-import model.PartieForet;
-import model.PartieJungle;
+import model.*;
 import util.Couleurs;
 import view.Ihm;
 public class Controller {
@@ -76,8 +74,6 @@ public class Controller {
         } catch (IndexOutOfBoundsException e) {
             ihm.afficherMessageErreur("Déplacement hors limites !");
         }
-
-        ihm.afficherCarte(partie);
     }
 
     private void interagir(){// 8/12
@@ -96,7 +92,7 @@ public class Controller {
     private void passerTour(){
         ihm.afficherMessage("\nVous passez votre tour.");
         partie.isEstEnCours();
-        ihm.afficherCarte(partie);
+
     }
 
 }

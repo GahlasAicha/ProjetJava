@@ -5,6 +5,7 @@ import java.io.IOException;
 public class PartieForet extends Partie{
     private Ecureuil[][] ecureuils ;// matrice pour pouvoir stocker les ecur
     private  Objet[][] objets;
+    FabriqueElementsForet elements=new FabriqueElementsForet();
     public PartieForet() {
         super();
     }

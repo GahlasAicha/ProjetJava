@@ -1,16 +1,19 @@
 package model;
 
-public class Singe extends Animal{
+public class Singe extends Animal {
     public Singe(int positionX, int positionY) {
         super("Singe", 'S', positionX, positionY);
-        setEtat(new EtatAffame(this)); // Par défaut, un singe commence affamé
+        setEtat(EtatAffame.getInstance()); // Par défaut, un singe commence affamé
     }
 
 
     public String afficherSinge() {
-        return null;
+        return "Nom: " + getNom() + ", Position: (" + getX() + ", " + getY() + ")";
     }
-
+    @Override
+    public void afficher() {
+       System.out.println(afficherSinge());
+    }
     @Override
     public void seNourrir() {
         etat.seNourrir();
@@ -18,16 +21,17 @@ public class Singe extends Animal{
 
     @Override
     public void apprivoiser() {
-     etat.apprivoiser();
+        etat.apprivoiser();
     }
 
     @Override
     public void recevoirCoup() {
-   etat.recevoirCoup();
+        etat.recevoirCoup();
+    }
+    @Override
+    public void agir(Carte carte) {
+        // L'écureuil agit selon son état actuel (affamé, rassasié, etc.)
+        etat.agir(carte);
     }
 
-    @Override
-    public void agir() {
-      etat.agir();
-    }
 }
