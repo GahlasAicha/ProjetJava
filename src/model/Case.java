@@ -4,6 +4,8 @@ public class Case {
     private int x,y;
     private char contenu; // si la case est vide c le char .  si c  c un symbole nah le symbole
     private boolean estOccupee;
+    private Animal animal;
+    private Objet objet ;
     /**
      * Constructeur pour créer une nouvelle case.
      * @param x La coordonnée X de la case.
@@ -76,5 +78,22 @@ public class Case {
                 '}';
     }
 
+
+
+    public Animal getAnimal() {
+        return animal ;
+    }
+
+    public void setAnimal(Animal animal) {
+        this.animal = animal;
+        this.estOccupee = (animal != null); // Si un animal est associé à cette case, elle est occupée
+    }
+
+    public Objet getObjet() {
+        return objet ;
+    }
+    public void setObjet(Objet objet) {
+        this.objet = objet;
+    }
 }
 

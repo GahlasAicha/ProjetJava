@@ -5,15 +5,22 @@ import java.io.IOException;
 public class PartieJungle extends Partie{
     private Singe[][] singes ;
     private Objet[][] objets;
-    private FabriqueElementsJungle elements= new FabriqueElementsJungle();
+    private FabriqueElementsJungle elements;
 
-    public PartieJungle() {
+    public PartieJungle(int choix) {
         super();
+        elements= new FabriqueElementsJungle();
+        initialiserPartie(choix);
     }
 
+
     @Override
-    public void initialiserPartie() {
-        initialiserCarte(35,100);
+    public void initialiserPartie(int choix) {
+        if (choix==1){
+            getCarteExistente(10,32);
+        }else if(choix==2) {
+            initialiserCarte(35, 100);
+        }
         initialiserElements();
     }
 
@@ -21,7 +28,16 @@ public class PartieJungle extends Partie{
 
     @Override
     protected void initialiserCarte(int hauteur, int largeur) {
-        this.carte = new Carte(largeur,hauteur);
+        this.carte = new Carte(hauteur,largeur);
+        objets = new Objet[hauteur][largeur];
+        singes = new Singe[hauteur][largeur];
+        this.carte.afficherCarte(elements.getSymbolesAutorises());
+
+    }
+
+    @Override
+    protected void getCarteExistente(int hauteur, int largeur) {
+        this.carte = new Carte(hauteur,largeur);
         objets = new Objet[hauteur][largeur];
         singes = new Singe[hauteur][largeur];
         try {
@@ -30,7 +46,6 @@ public class PartieJungle extends Partie{
             System.err.println("Erreur lors du chargement de la carte depuis le fichier : " + e.getMessage());
             throw new RuntimeException(e);
         }
-
     }
 
     @Override
@@ -40,49 +55,55 @@ public class PartieJungle extends Partie{
                 char caseContenu = carte.getCase(i, j).getContenu();
                 switch (caseContenu) {
                     case '@':
-                        setPersonnage(new Personnage("fiter",i,j));
+                        ajouterPersonnage("perso",i,j);
                     case 'S': // Singe
-                        Singe singe = new Singe(i,j);
-                        singes[i][j] = singe; // Ajouter le singe à la matrice des singes
+                        Singe singe = (Singe) elements.creerAnimal(caseContenu,i,j);
+                        ajouterAnimal(singe);
                         break;
-                    case 'B': // Banane
-                        objets[i][j] = new Objet("Banane", 'B', true); // Ajouter une banane à cet endroit
+                    /*case 'B': // Banane
+                        ajouterObjet(new Objet("Banane", 'B', true)); // Ajouter une banane à cet endroit
                         break;
                     case 'C': // Champignon
-                        objets[i][j] = new Objet("Champignon", 'C', true); // Ajouter un champignon
+                        ajouterObjet(new Objet("Champignon", 'C', true)); // Ajouter un champignon
                         break;
                     case 'P': // Petit rocher
-                        objets[i][j] = new Objet("Petit rocher", 'P', false); // Ajouter un rocher
+                        ajouterObjet(new Objet("Petit rocher", 'P', false)); // Ajouter un rocher
                         break;
                     case 'T': // Cocotier
-                        objets[i][j] = new Objet("Cocotier", 'T', false); // Ajouter un cocotier
+                        ajouterObjet(new Objet("Cocotier", 'T', false)); // Ajouter un cocotier
+                        break;*/
+                    case ' ':
                         break;
-                    default: // Zone vide
+                    default:
+                        Objet objet=elements.creerObjet(caseContenu,i,j);
+                        ajouterObjet(objet);
                         break;
                 }
             }
         }
     }
 
-    public void setPersonnage(Personnage fiter) {
-    }
 
 
     @Override
-    public void rammaserObjet(int x, int y) {
-        if (objets[x][y] != null) {
-            Objet objet = objets[x][y];
-            if (objet.isEstRamassable()) {
-                System.out.println("Vous pouvez ramasser l'objet " + objet.getNom() + " !");
-                objets[x][y] = null;
-            } else {
-                System.out.println("Cet objet n'est pas ramassable.");
+    public void ramasserObjet(int x, int y) {
+        if (getPersonnage().estEnface(x,y)) {
+            Objet objet = getObjets(x,y);
+            if (objet!=null) {
+                if (objet.isEstRamassable()) {
+                    getPersonnage().ramasserObjet(objet);
+                    enleverObjet(objet);
+
+                    getCarte().setCaseContenu(x, y, ' ');
+
+                } else {
+                    System.out.println("Cet objet n'est pas ramassable.");
+                }
             }
         } else {
             System.out.println("Il n'y a rien à ramasser ici.");
         }
     }
 }
-
 
 

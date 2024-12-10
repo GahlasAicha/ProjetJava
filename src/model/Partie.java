@@ -1,6 +1,7 @@
 package model;
 // on va utiliser le design pattern factory pour la classe factory ( creer des instances specifiques comme partie jungle et partie foret )
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public abstract class Partie {
     protected Carte carte;
@@ -18,23 +19,100 @@ public abstract class Partie {
         this.objets = new ArrayList<>();
         this.estEnCours = true;
         this.statut = "En cours ";
-        initialiserPartie();
+        //initialiserPartie();
     }
     public void ajouterPersonnage(String nom, int x, int y) {
-        if (carte.getCase(x, y).getContenu() == '.') { // Vérifiez si la case est vide
-            Personnage personnage = new Personnage(nom, x, y);
-            this.personnage=personnage;
+        if (carte.getCase(x, y).getContenu() == '@') {
+            this.personnage= new Personnage(nom, x, y);
             carte.setCaseContenu(x, y, '@'); // Placez le personnage sur la carte
         } else {
             System.out.println("Impossible de placer le personnage : case occupée.");
         }
     }
 
-    public abstract void initialiserPartie();
+    public abstract void initialiserPartie(int choix);
 
-    public abstract void rammaserObjet(int x, int y);
+    public abstract void ramasserObjet(int x, int y);
+    public void lancerObjet (int index, String direction){
+        int nouvelleX = personnage.getX();
+        int nouvelleY = personnage.getY();
+        // Déterminer la nouvelle position en fonction de la direction
+        switch (direction) {
+            case "haut":
+                nouvelleX -= 1;
+                break;
+            case "bas":
+                nouvelleX += 1;
+                break;
+            case "gauche":
+                nouvelleY -= 1;
+                break;
+            case "droite":
+                nouvelleY += 1;
+                break;
+            default:
+                System.out.println("Direction non valide.");
+                return;
+        }
+        // Vérifier si la case dans la direction indiquée est vide
+        if (carte.getCase(nouvelleX, nouvelleY).getContenu() == ' ') {
+            Objet objet = personnage.reposerObjet(index); // Prendre l'objet du personnage
+            objets.add(objet); // Ajouter l'objet à la liste des objets
+            objet.setPosition(nouvelleX, nouvelleY); // Mettre à jour la position de l'objet
+            carte.setCaseContenu(nouvelleX, nouvelleY, objet.getSymbole()); // Placer l'objet sur la carte
+            System.out.println("L'objet a été lancé à la position (" + nouvelleX + ", " + nouvelleY + ")");
+        } else {
+            System.out.println("La case est occupée. Impossible de lancer l'objet.");
+        }
+    }
+
+
+        public void jeterObjet(int index, String direction) {
+            Scanner scanner = new Scanner(System.in);
+
+
+            // Calcul des nouvelles coordonnées en fonction de la direction
+            int nouvelleX = personnage.getX();
+            int nouvelleY = personnage.getY();
+
+            switch (direction) {
+                case "haut":
+                    nouvelleX -= 1;  // Déplacement vers le haut
+                    break;
+                case "bas":
+                    nouvelleX += 1;  // Déplacement vers le bas
+                    break;
+                case "gauche":
+                    nouvelleY -= 1;  // Déplacement vers la gauche
+                    break;
+                case "droite":
+                    nouvelleY += 1;  // Déplacement vers la droite
+                    break;
+                default:
+                    System.out.println("Direction invalide, réessayez.");
+                    return;  // Quitter si la direction n'est pas valide
+            }
+
+            // Vérification si la case est vide avant de jeter l'objet
+            if (carte.getCase(nouvelleX, nouvelleY).getContenu() == ' ') {
+                // Le personnage jette l'objet
+                Objet objet = personnage.jeterObjet(index);
+                objets.add(objet);  // Ajouter l'objet dans la liste des objets
+
+                // Mettre à jour la carte avec la nouvelle position de l'objet
+                carte.setCaseContenu(nouvelleX, nouvelleY, objet.getSymbole());
+
+                System.out.println("L'objet a été jeté dans la direction " + direction + " à la position (" + nouvelleX + ", " + nouvelleY + ").");
+            } else {
+                System.out.println("La case " + direction + " est occupée, vous ne pouvez pas jeter l'objet ici.");
+            }
+        }
+
+
+
 
     protected abstract void initialiserCarte(int hauteur, int largeur);
+    protected abstract void getCarteExistente(int hauteur,int largeur);
 
     protected abstract void initialiserElements();
 
@@ -42,9 +120,6 @@ public abstract class Partie {
         return personnage;
     }
 
-    public void setPersonnage(Personnage personnage) {
-        this.personnage = personnage;
-    }
 
     public int getTours() {
         return tours;
@@ -70,8 +145,20 @@ public abstract class Partie {
         this.animaux = animaux;
     }
 
-    public ArrayList<Objet> getObjets() {
-        return objets;
+    public Objet getObjets(int x,int y) {
+        if (!objets.isEmpty()) {
+            for (Objet objet : objets) {
+                if (objet!=null) {
+                    if (objet.getX() == x && objet.getY() == y) {
+                        return objet;
+                    }
+                }
+            }
+        }else {
+            System.out.println("vous n'avez pas b'objets a disposition");
+        }
+        return null;
+
     }
 
     public void setObjets(ArrayList<Objet> objets) {
@@ -96,8 +183,8 @@ public abstract class Partie {
         if (nouvelleX >= 0 && nouvelleX < carte.getHauteur() && nouvelleY >= 0 && nouvelleY < carte.getLargeur()) {
             // Vérifier si la case n'est pas déjà occupée
             char caseContenu = carte.getCase(nouvelleX, nouvelleY).getContenu();
-            if (caseContenu == '.') {
-                carte.setCaseContenu(personnage.getX(), personnage.getY(), '.'); // Supprimer l'ancien emplacement
+            if (caseContenu == ' ') {
+                carte.setCaseContenu(personnage.getX(), personnage.getY(), ' '); // Supprimer l'ancien emplacement
                 personnage.seDeplacer(dX, dY);
                 carte.setCaseContenu(nouvelleX, nouvelleY, '@'); // Ajouter le personnage à la nouvelle position
             } else {
@@ -116,6 +203,10 @@ public abstract class Partie {
 
     public void ajouterObjet(Objet objet) {
         objets.add(objet);
+    }
+
+    public void enleverObjet(Objet objet){
+        objets.remove(objet);
     }
 
     // Méthode pour afficher l'état actuel de la partie (par exemple, carte, objets, animaux)

@@ -1,22 +1,21 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Personnage {
     private String nom;
     private char symbole;
-    private int vie,x,y,force;
+    private int x,y;
     private ArrayList<Objet> inventaire;
     private boolean estVivant;
-    private List<Case> amis; // Liste des animaux amis
+    private ArrayList<Animal> amis; // Liste des animaux amis
     public Personnage(String nom,int x,int y) {
         this.nom=nom;
         this.inventaire=new ArrayList<>();
+        this.amis=new ArrayList<Animal>();
         this.x= x;
         this.y=y;
-        this.symbole=symbole;
-        this.amis=new ArrayList<>();
+        this.symbole='@';
     }
 
 
@@ -25,31 +24,30 @@ public class Personnage {
         this.y += dY;
     }
 
-    // les methodes
-    /* public void seDeplacer(int dX, int dY, Carte carte ) {
-        // Déplacement de personnage
-          int newX = x + dX;
-          int newY= y + dY;
-          if (newX >=0 && newX< carte.getHauteur() && newY>=0 && newY< carte.getLargeur()){
-              Case destination = carte.getCase(newX, newY);
-              if (!destination.isEstOccupee()) {
-                  x = newX;
-                  y = newY;
-              } else {
-                  System.out.println("La case est occupée !");
-              }
-          } else {
-              System.out.println("Déplacement hors des limites !");
-          }
-   */
 
+    // les methodes
+
+    public boolean estEnface(int x,int y){
+        return this.x + 1 == x && this.y == y;
+    }
     public void ramasserObjet(Objet objet) {
         // Ajoute un objet
         inventaire.add(objet);
+        objet.setX(-1);
+        objet.setY(-1);
     }
-    public void reposerObjet(Objet objet) {
+    public Objet reposerObjet(int index) {
         // Retire un objet de l'inventaire, s'il est présent
-        inventaire.remove(objet);
+        Objet objet= inventaire.remove(index);
+        objet.setX(this.x+1);
+        objet.setY(this.y);
+        return objet;
+    }
+    public Objet jeterObjet(int index) {
+        Objet objet= inventaire.remove(index);
+        objet.setX(this.x+3);
+        objet.setY(this.y);
+        return objet;
     }
 
     public void nourrirAnimal(Objet nourriture) {
@@ -69,61 +67,52 @@ public class Personnage {
 
     public void devenirAmi(Animal animal) {
         if (!amis.contains(animal)) {
-            amis.add(new Case(animal.getX(), animal.getY(), animal.getSymbole()));
+            amis.add(animal);
             System.out.println(nom + " est devenu ami avec " + animal.getNom());
         }
     }
 
-
-
-
 // les getters et setters
 
-public int getVie() {
-    return vie;
-}
 
-public void setVie(int vie) {
-    this.vie = vie;
-}
+    public int getX() {
+        return x;
+    }
 
-public int getX() {
-    return x;
-}
+    public void setX(int x) {
+        this.x = x;
+    }
 
-public void setX(int x) {
-    this.x = x;
-}
+    public int getY() {
+        return y;
+    }
 
-public int getY() {
-    return y;
-}
+    public void setY(int y) {
+        this.y = y;
+    }
 
-public void setY(int y) {
-    this.y = y;
-}
+    public boolean isEstVivant() {
+        return estVivant;
+    }
 
+    public void setEstVivant(boolean estVivant) {
+        this.estVivant = estVivant;
+    }
 
-public int getForce() {
-    return force;
-}
-
-public void setForce(int force) {
-    this.force = force;
-}
-
-public boolean isEstVivant() {
-    return estVivant;
-}
-
-public void setEstVivant(boolean estVivant) {
-    this.estVivant = estVivant;
-}
-
-public char getSymbole() {
-    return symbole;
-}
- public List<Case> getAmis(){
+    public char getSymbole() {
+        return symbole;
+    }
+    public ArrayList<Animal> getAmis(){
         return amis;
     }
+
+
+    public ArrayList<Objet> getInventaire() {
+        return inventaire;
+    }
+
+    public void setInventaire(ArrayList<Objet> inventaire) {
+        this.inventaire = inventaire;
+    }
+
 }

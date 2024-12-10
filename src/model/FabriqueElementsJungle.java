@@ -11,18 +11,18 @@ public class FabriqueElementsJungle extends FabriqueElements{
     }
 
     @Override
-    public Objet creerObjet(char symbole) {
+    public Objet creerObjet(char symbole, int x, int y) {
         switch (symbole) {
-            case 'B': return new Objet("Banane", 'B', true);
-            case 'C': return new Objet("Champignon", 'C', true);
-            case 'P': return new Objet("Petit rocher", 'P', false);
-            case 'T': return new Objet("Cocotier", 'T', false);
+            case 'b': return new Objet("Banane", 'b', true,x,y);
+            case 'C': return new Objet("Champignon", 'C', true,x,y);
+            case 'P': return new Objet("Petit rocher", 'P', false,x,y);
+            case 'T': return new Objet("Cocotier", 'T', false,x,y);
             default: return null;
         }
     }
 
     @Override
     public char[] getSymbolesAutorises() {
-        return new char[]{' ', 'B', 'C', 'P', 'T', 'S'};
+        return new char[]{' ', 'b', 'C', 'P', 'T', 'S'};
     }
 }

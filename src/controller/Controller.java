@@ -3,16 +3,20 @@ package controller;
 import model.*;
 import util.Couleurs;
 import view.Ihm;
+
+import java.util.ArrayList;
+
 public class Controller {
     private Partie partie;
     private Ihm ihm;
 
     public Controller( Ihm ihm){
         int choi=ihm.lireEntreeEntier("choisissez un theme: \n1. Foret \n2. Jungle \n");
+        int choi2=ihm.lireEntreeEntier("avez vous une carte existante? \n1. oui \n2. non \n");
         if (choi==1){
-            partie= new PartieForet();
+            partie= new PartieForet(choi2);
         }else {
-            partie= new PartieJungle();
+            partie= new PartieJungle(choi2);
         }
         this.ihm=ihm;
     }
@@ -69,7 +73,7 @@ public class Controller {
         int dy = ihm.lireEntreeEntier("Entrez le déplacement en Y (-1, 0, 1) : ");
 
         try {
-            partie.deplacerPersonage(dx, dy);
+            partie.deplacerPersonage(dy, dx);
             ihm.afficherMessageSucces("Le personnage s'est déplacé.");
         } catch (IndexOutOfBoundsException e) {
             ihm.afficherMessageErreur("Déplacement hors limites !");
@@ -78,14 +82,52 @@ public class Controller {
 
     private void interagir(){// 8/12
         ihm.afficherMessage("\nInteraction :");
-
+        int choix=ihm.lireEntreeEntier("\n1. ramasse un objet\n");
+        if (choix==1){
+            partie.ramasserObjet(partie.getPersonnage().getX()+1,partie.getPersonnage().getY());
+        }
 
     }
 
-    private void menuObjetAmi(){// 8/12
+    private void menuObjetAmi(){// 10/12
         ihm.afficherMessage("\nmenu:");
+        ArrayList<Objet> objets=partie.getPersonnage().getInventaire();
+        ArrayList<Animal> animals=partie.getPersonnage().getAmis();
+        for (int i=0;i<objets.size();i++){
+            ihm.afficherMessage(i+"."+objets.get(i).getNom());
+        }
+        for (int j=0;j<animals.size();j++){
+            ihm.afficherMessage(j+objets.size()+"."+animals.get(j).getNom());
+        }
+        if (objets.isEmpty() && animals.isEmpty()){
+            ihm.afficherMessage("votre sac est vide!");
+        }
+        int choix= ihm.lireEntreeEntier("\n1. poser un objet!\n2. lencer un objet\n3.retour\n");
+        switch (choix){
+            case 1:
 
-        ihm.afficherMessage("\n lancer un objet!");
+                int choi= ihm.lireEntreeEntier("choisissez l'objet\n");
+                String direction = ihm.lireEntreeTexte("choisissez la direction haut , bas , gauche  et droite ");
+
+                if (choi>=0 && choi<objets.size()) {
+                    partie.lancerObjet(choi,direction);
+                } else {
+                    ihm.afficherMessage("chois invalid");
+                }
+                break;
+            case 2:
+                choi = ihm.lireEntreeEntier("choisissez l'objet\n");
+                direction = ihm.lireEntreeTexte("choisissez la direction haut , bas , gauche  et droite ");
+                if (choi>=0 && choi<objets.size()) {
+                    partie.jeterObjet(choi,direction);
+                } else {
+                    ihm.afficherMessage("chois invalid");
+                }
+                break;
+            case 3:
+                break;
+
+        }
 
     }
 

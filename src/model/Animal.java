@@ -1,11 +1,12 @@
 package model;
 
 public  abstract class Animal {
-    protected String nom;
-    protected char symbole;
-    protected int x, y;
+    private  String nom;
+    private char symbole;
+    private  int x, y;
     protected EtatAnimal etat;
-    //   private boolean estAmi ;
+       private boolean ami ;
+     private int compteurTour=0;
 
     public Animal(String nom, char symbole, int x, int y) {
 
@@ -87,6 +88,45 @@ public  abstract class Animal {
     }
 
 
+    public void incrementerCompteur() {
 
+        compteurTour++;
+    }
 
+    public int getCompteurTour() {
+        return compteurTour;
+    }
+    public void resetCompteur() {
+        compteurTour = 0;
+    }
+
+    // Méthode pour définir la nouvelle position de l'animal
+    public void setPosition(int x, int y) {
+        // Mise à jour des coordonnées de l'animal
+        this.x = x;
+        this.y = y;
+        System.out.println("La position de " + nom + " a été mise à jour : (" + x + ", " + y + ")");
+    }
+
+    // Méthode pour vérifier si l'animal est proche du personnage
+    public boolean estProchePersonnage(Carte carte) {
+        // Récupère la position du personnage sur la carte
+        int[] positionPersonnage = carte.getPositionPersonnage(); // Suppose qu'il y a une méthode dans Carte pour obtenir la position du personnage
+
+        // Calcule la distance entre l'animal et le personnage
+        int distanceX = Math.abs(this.x - positionPersonnage[0]);
+        int distanceY = Math.abs(this.y - positionPersonnage[1]);
+
+        // Si l'animal est à une case adjacente au personnage (en ligne droite ou diagonale)
+        return distanceX <= 1 && distanceY <= 1;
+    }
+
+    public void setAmi(boolean b) {
+        this.ami = b;
+    }
+
+    // Méthode pour obtenir si l'animal est ami ou non
+    public boolean estAmi() {
+        return this.ami;
+    }
 }

@@ -11,12 +11,12 @@ public class FabriqueElementsForet extends FabriqueElements {
     }
 
     @Override
-    public Objet creerObjet(char symbole) {
+    public Objet creerObjet(char symbole,int x,int y) {
         switch (symbole) {
-            case 'G': return new Objet("Gland", 'G', true);
-            case 'A': return new Objet("Arbre", 'A', false);
-            case 'B': return new Objet("Buisson", 'B', false);
-            case 'C': return new Objet("Champignon", 'C', true);
+            case 'G': return new Objet("Gland", 'G', true,x,y);
+            case 'A': return new Objet("Arbre", 'A', false,x,y);
+            case 'B': return new Objet("Buisson", 'B', false,x,y);
+            case 'C': return new Objet("Champignon", 'C', true,x,y);
             default: return null;
         }
     }

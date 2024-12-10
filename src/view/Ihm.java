@@ -51,10 +51,13 @@ public class Ihm {
                             backGroundColor= Couleurs.ANSI_YELLOW_BACKGROUND;
                             break;
                         case 'A':
-                        case 'B':   // Arbre
+                        case 'T':
+                        case 'B':
+                        case 'P':// Arbre
                             couleur = Couleurs.ANSI_GREEN;
                             backGroundColor=Couleurs.ANSI_BLACK_BACKGROUND;
                             break;
+                        case 'b':
                         case 'G': // Gland ou Banane
                             couleur = Couleurs.ANSI_YELLOW;
                             backGroundColor=Couleurs.ANSI_RED_BACKGROUND;
@@ -83,8 +86,10 @@ public class Ihm {
     }
 
     public String lireEntreeTexte(String invite) {
+
         System.out.print(Couleurs.ANSI_CYAN + invite + Couleurs.ANSI_RESET);
-        return scanner.next();
+        return scanner.next().toLowerCase();
     }
 
 }
+
