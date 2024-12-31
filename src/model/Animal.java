@@ -5,8 +5,8 @@ public  abstract class Animal {
     private char symbole;
     private  int x, y;
     protected EtatAnimal etat;
-       private boolean ami ;
-     private int compteurTour=0;
+    private boolean ami ;
+    private int compteurTour=0;
 
     public Animal(String nom, char symbole, int x, int y) {
 
@@ -14,7 +14,7 @@ public  abstract class Animal {
         this.symbole = symbole;
         this.x = x;
         this.y = y;
-        this.setEtat(EtatAffame.getInstance());// par defaut l'animal est affamé
+        this.etat=new EtatAffame();// par defaut l'animal est affamé
 
     }
 
@@ -40,7 +40,12 @@ public  abstract class Animal {
         etat.agir(carte);
     }
 
+    public void deplacerAnimal(int x, int y){
+        this.x=x;
+        this.y=y;
+        System.out.println(this.nom + " se déplace à la position (" + x + ", " + y + "");
 
+    }
 
 
     // les getters et setters

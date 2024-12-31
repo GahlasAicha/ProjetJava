@@ -6,7 +6,7 @@ public class EtatAApprivoise extends EtatAnimal {
     private static EtatAApprivoise instance;
 
     // Constructeur privé pour appliquer le Singleton
-    private EtatAApprivoise() {
+    public  EtatAApprivoise() {
     }
 
     // Méthode pour obtenir l'instance unique de l'état

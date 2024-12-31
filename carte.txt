@@ -1,6 +1,3 @@
-F
-35
-100
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 A                                   BBB                                       BB                   A
 A       ABC                                                         B  B            B              A

@@ -7,7 +7,7 @@ public class EtatAffame extends EtatAnimal {
     private static EtatAffame instance;
 
     // Constructeur privé pour empêcher l'instanciation directe
-    private EtatAffame() {}
+    public EtatAffame() {}
 
     // Méthode pour obtenir l'instance unique
     public static EtatAffame getInstance() {
@@ -109,6 +109,7 @@ public class EtatAffame extends EtatAnimal {
         animal.setY(i1); // Met à jour la position y de l'animal
         System.out.println(animal.getNom() + " se déplace à la position (" + i + ", " + i1 + ").");
     }
+
 }
 
 

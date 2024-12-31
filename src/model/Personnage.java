@@ -9,14 +9,16 @@ public class Personnage {
     private ArrayList<Objet> inventaire;
     private boolean estVivant;
     private ArrayList<Animal> amis; // Liste des animaux amis
-    public Personnage(String nom,int x,int y) {
-        this.nom=nom;
-        this.inventaire=new ArrayList<>();
-        this.amis=new ArrayList<Animal>();
-        this.x= x;
-        this.y=y;
-        this.symbole='@';
+    public Personnage(String nom, int x, int y) {
+        this.nom = nom;
+        this.inventaire = new ArrayList<>();
+        this.amis = new ArrayList<Animal>();
+        this.x = x;
+        this.y = y;
+        this.symbole = '@';
+        this.estVivant = true;  // Initialisation de l'état du personnage
     }
+
 
 
     public void seDeplacer(int dX, int dY) {
@@ -50,7 +52,7 @@ public class Personnage {
         return objet;
     }
 
-    public void nourrirAnimal(Objet nourriture) {
+    public void nourrirAnimal(Objet nourriture, Animal animal ) {
         // si la nouriture est presente
         if (inventaire.contains(nourriture)) {
             System.out.println(nom + " nourrit l'animal avec " + nourriture);

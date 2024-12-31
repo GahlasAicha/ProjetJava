@@ -2,31 +2,36 @@ package model;
 
 import java.io.IOException;
 
-public class PartieJungle extends Partie{
+public class FabriquePartieJungle extends FabriqueAbstraitePartie{
     private Singe[][] singes ;
     private Objet[][] objets;
     private FabriqueElementsJungle elements;
+    private Carte carte ;
+    private Personnage personnage;
 
-    public PartieJungle(int choix) {
+    public FabriquePartieJungle(int choix) {
         super();
         elements= new FabriqueElementsJungle();
         initialiserPartie(choix);
     }
 
 
-    @Override
+
     public void initialiserPartie(int choix) {
         if (choix==1){
             getCarteExistente(10,32);
         }else if(choix==2) {
             initialiserCarte(35, 100);
-        }
+        }else {
+            // Cas où le choix est invalide, afficher un message d'erreur ou définir un cas par défaut
+            System.out.println("Choix invalide. Veuillez choisir 1 ou 2.");
+            return;}
         initialiserElements();
     }
 
 
 
-    @Override
+
     protected void initialiserCarte(int hauteur, int largeur) {
         this.carte = new Carte(hauteur,largeur);
         objets = new Objet[hauteur][largeur];
@@ -35,7 +40,7 @@ public class PartieJungle extends Partie{
 
     }
 
-    @Override
+
     protected void getCarteExistente(int hauteur, int largeur) {
         this.carte = new Carte(hauteur,largeur);
         objets = new Objet[hauteur][largeur];
@@ -49,16 +54,28 @@ public class PartieJungle extends Partie{
     }
 
     @Override
-    protected void initialiserElements() {
+    public Partie creerPartie(int choix, Personnage personnage) {
+       
+        Partie partie = new Partie("Jungle", personnage);
+        return partie;
+    }
+
+    @Override
+    public Carte creerCarte( int hauteur,int largeur) {
+        initialiserCarte(hauteur, largeur);
+        return carte;
+    }
+
+    public void initialiserElements() {
         for (int i = 0; i < carte.getHauteur(); i++) {
             for (int j = 0; j < carte.getLargeur(); j++) {
                 char caseContenu = carte.getCase(i, j).getContenu();
                 switch (caseContenu) {
                     case '@':
-                        ajouterPersonnage("perso",i,j);
+                        carte.ajouterPersonnage("perso",i,j);
                     case 'S': // Singe
                         Singe singe = (Singe) elements.creerAnimal(caseContenu,i,j);
-                        ajouterAnimal(singe);
+                        carte.ajouterAnimal(singe,i,j);
                         break;
                     /*case 'B': // Banane
                         ajouterObjet(new Objet("Banane", 'B', true)); // Ajouter une banane à cet endroit
@@ -76,7 +93,7 @@ public class PartieJungle extends Partie{
                         break;
                     default:
                         Objet objet=elements.creerObjet(caseContenu,i,j);
-                        ajouterObjet(objet);
+                        carte.ajouterObjet(objet,i,j);
                         break;
                 }
             }
@@ -85,7 +102,6 @@ public class PartieJungle extends Partie{
 
 
 
-    @Override
     public void ramasserObjet(int x, int y) {
         if (getPersonnage().estEnface(x,y)) {
             Objet objet = getObjets(x,y);
@@ -104,6 +120,35 @@ public class PartieJungle extends Partie{
             System.out.println("Il n'y a rien à ramasser ici.");
         }
     }
+
+    public Carte getCarte() {
+        return carte; // Retourne la carte associée à la classe
+    }
+    private Objet getObjets(int x, int y) {
+        return objets[x][y];
+    }
+
+    private Personnage getPersonnage() {
+        return carte.getPersonnage();
+    }
+    private void enleverObjet(Objet objet) {
+        for (int i = 0; i < carte.getHauteur(); i++) {
+            for (int j = 0; j < carte.getLargeur(); j++) {
+                if (objets[i][j] == objet) {
+                    // Enlève l'objet de la carte en mettant la case vide
+                    carte.setCaseContenu(i, j, ' ');
+                    objets[i][j] = null; // Supprime l'objet du tableau
+                    break;
+                }
+            }
+        }
+    }
+
+    public Partie getPartie() {
+        return new Partie();
+    }
 }
+
+
 
 

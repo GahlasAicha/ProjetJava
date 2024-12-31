@@ -12,7 +12,7 @@ public class Singe extends Animal {
     }
     @Override
     public void afficher() {
-       System.out.println(afficherSinge());
+        System.out.println(afficherSinge());
     }
     @Override
     public void seNourrir() {

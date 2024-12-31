@@ -9,7 +9,7 @@ public class EtatARassasie extends EtatAnimal {
     private static final int TOURS_ECUREUIL = 5;   // Tours avant que l'écureuil redevienne affamé
     private static final int TOURS_SINGE = 3;      // Tours avant que le singe redevienne affamé
 
-    private EtatARassasie() {}
+    public EtatARassasie() {}
 
     public static EtatARassasie getInstance() {
         if (instance == null) {
@@ -68,6 +68,7 @@ public class EtatARassasie extends EtatAnimal {
         // Récupérer les cases adjacentes sous forme de coordonnées
         List<int[]> casesAdjacentes = carte.obtenirCasesAdjacentes(animal.getX(), animal.getY());
         Random rand = new Random();
+
 
         // Si l'animal est un écureuil et est rassasié, il se déplace vers une case vide
         int toursAvantAffame = (animal instanceof Ecureuil) ? TOURS_ECUREUIL : TOURS_SINGE;

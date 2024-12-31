@@ -8,15 +8,20 @@ import java.util.ArrayList;
 
 public class Controller {
     private Partie partie;
+
     private Ihm ihm;
 
     public Controller( Ihm ihm){
         int choi=ihm.lireEntreeEntier("choisissez un theme: \n1. Foret \n2. Jungle \n");
         int choi2=ihm.lireEntreeEntier("avez vous une carte existante? \n1. oui \n2. non \n");
-        if (choi==1){
-            partie= new PartieForet(choi2);
-        }else {
-            partie= new PartieJungle(choi2);
+
+
+        if (choi == 1) {
+            FabriquePartieForet fabrique = new FabriquePartieForet(choi2);
+            partie = fabrique.getPartie();
+        } else {
+            FabriquePartieJungle fabrique = new FabriquePartieJungle(choi2);
+            partie = fabrique.getPartie();
         }
         this.ihm=ihm;
     }
@@ -26,6 +31,8 @@ public class Controller {
         boolean enCours = true;
 
         while (enCours) {
+            Partie partieJeu = partie.getPartie();
+
             ihm.afficherCarte(partie);
             afficherMenu();
             int choix = ihm.lireEntreeEntier("Votre choix : ");
@@ -43,10 +50,6 @@ public class Controller {
                     menuObjetAmi();
                     break;
                 case 4:
-                    passerTour();
-                    partie.setTours(partie.getTours()+1);
-                    break;
-                case 5:
                     ihm.afficherMessage("Merci d'avoir joué !");
                     enCours = false;
                     break;
@@ -63,7 +66,6 @@ public class Controller {
         ihm.afficherMessage("1. Déplacer le personnage");
         ihm.afficherMessage("2. Interagir avec un animal ou un objet");
         ihm.afficherMessage("3. voir le menu des objet et amis");
-        ihm.afficherMessage("4. Passer un tour");
         ihm.afficherMessage("5. Quitter le jeu");
     }
 
@@ -73,10 +75,13 @@ public class Controller {
         int dy = ihm.lireEntreeEntier("Entrez le déplacement en Y (-1, 0, 1) : ");
 
         try {
-            partie.deplacerPersonage(dy, dx);
+            partie.deplacerPersonnage(dy, dx);
             ihm.afficherMessageSucces("Le personnage s'est déplacé.");
         } catch (IndexOutOfBoundsException e) {
             ihm.afficherMessageErreur("Déplacement hors limites !");
+        } catch (Exception e) {
+            // Handle other possible exceptions
+            ihm.afficherMessageErreur("Erreur lors du déplacement : " + e.getMessage());
         }
     }
 

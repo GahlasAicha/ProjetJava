@@ -28,6 +28,10 @@ public class Ihm {
 
     public void afficherCarte(Partie partie) {
         Carte carte = partie.getCarte();
+        if (carte == null) {
+            System.out.println("Erreur : La carte n'est pas initialisée !");
+            return;
+        }
         Case[][] grille = carte.getGrille();
         System.out.println(Couleurs.ANSI_YELLOW + "\nAffichage de la carte :" + Couleurs.ANSI_RESET);
         for (int i = 0; i < grille.length; i++) {
@@ -86,10 +90,8 @@ public class Ihm {
     }
 
     public String lireEntreeTexte(String invite) {
-
         System.out.print(Couleurs.ANSI_CYAN + invite + Couleurs.ANSI_RESET);
-        return scanner.next().toLowerCase();
+        return scanner.next();
     }
 
 }
-
