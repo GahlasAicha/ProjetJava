@@ -64,7 +64,7 @@ public class Case {
      * Réinitialise la case à son état vide.
      */
     public void viderCase() {
-        this.contenu = '.';
+        this.contenu = ' ';
         this.estOccupee = false;
     }
 

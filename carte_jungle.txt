@@ -1,11 +1,11 @@
-S   B    C  P  T  S   B   C  T 
-     P   T   C  B    S      C 
-  T  B  P     S   C    T    P 
-S    C     T   P   B   C      S
-    B   T   C @   P     B    T 
- C  P   B   S    T  C    P     
-     S      B  C   T    P    B 
-T    P    C   S     B   T    C 
-    C     B     T    P    C    
-S  T    P   B     C    S     T 
+S   b    C  P  T  S   b   C  T
+     P   T   C  b    S      C
+  T  b  P     S   C    T    P
+S    C     T   P   b   C      S
+    b   T   C @   P     b    T
+ C  P   b   S    T  C    P
+     S      b  C   T    P    b
+T    P    C   S     b   T    C
+    C     b     T    P    C
+S  T    P   b     C    S     T
 

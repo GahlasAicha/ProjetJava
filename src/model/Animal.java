@@ -8,9 +8,10 @@ public  abstract class Animal {
     private String couleur =  Couleurs.ANSI_PURPLE+ Couleurs.ANSI_YELLOW_BACKGROUND;
     private  int x, y;
     protected EtatAnimal etat;
-    private boolean ami ;
+    private boolean ami = false;
     private int compteurToursRassasie = 0; // Compte les tours rassasié
     private int compteurNourrituresPersonnage = 0; // Compte les nourritures près du personnage
+
 
     public Animal(String nom, char symbole, int x, int y) {
 
@@ -93,17 +94,12 @@ public  abstract class Animal {
 
     // Méthode pour vérifier si l'animal est proche du personnage
     public boolean estProchePersonnage(Carte carte) {
-        // Récupère la position du personnage sur la carte
-        int[] positionPersonnage = carte.getPositionPersonnage(); // Suppose qu'il y a une méthode dans Carte pour obtenir la position du personnage
+        int[] positionPersonnage = carte.getPositionPersonnage();
+        int[] positionAnimal = new int[] {this.x, this.y};
 
-        // Calcule la distance entre l'animal et le personnage
-        int distanceX = Math.abs(this.x - positionPersonnage[0]);
-        int distanceY = Math.abs(this.y - positionPersonnage[1]);
-
-        // Si l'animal est à une case adjacente au personnage (en ligne droite ou diagonale)
-        return distanceX <= 1 && distanceY <= 1;
+        int distance = Math.abs(positionAnimal[0] - positionPersonnage[0]) + Math.abs(positionAnimal[1] - positionPersonnage[1]);
+        return distance <= 1;
     }
-
 
     // Méthodes pour gérer les compteurs et l'amitié
     public void incrementerCompteurToursRassasie() {
@@ -138,17 +134,58 @@ public  abstract class Animal {
     public abstract void afficher();
 
     // Méthodes déléguées à l'état
-    public void seNourrir() {
+    public void seNourrir( ) {
         etat.seNourrir();
     }
     public void apprivoiser() {
         etat.apprivoiser();
     }
+
     public void recevoirCoup() {
         etat.recevoirCoup();
+        ami = false; // Si un coup est donné à l'animal, l'amitié est rompue
+        System.out.println(nom + " n'est plus ami avec le personnage après avoir reçu un coup.");
     }
     public void agir(Carte carte) {
         etat.agir(carte);
+    }
+
+    // méthode pour gérer l'amitié
+    // Méthode pour gérer l'amitié
+    // Méthode pour gérer l'amitié
+    public void checkAmitie(Carte carte) {
+        if (estProchePersonnage(carte)) {
+            if (this instanceof Ecureuil) {
+                // Si un écureuil affamé se nourrit près du personnage, il devient ami immédiatement
+                if (this.etat instanceof EtatAffame) {
+                    ami = true;
+                    System.out.println(nom + " devient ami avec le personnage !");
+                }
+            } else if (this instanceof Singe) {
+                // Si un singe affamé se nourrit près du personnage
+                if (this.etat instanceof EtatAffame) {
+                    incrementerCompteurNourrituresPersonnage();
+                    if (compteurNourrituresPersonnage == 1) {
+                        System.out.println(nom + " commence à apprécier le personnage.");
+                    } else if (compteurNourrituresPersonnage >= 2) {
+                        ami = true;
+                        System.out.println(nom + " devient ami avec le personnage après 2 nourritures consécutives !");
+                    }
+                }
+            }
+        } else {
+            // Réinitialisation des compteurs et de l'amitié si l'animal n'est plus proche
+            resetCompteurNourrituresPersonnage();
+            if (ami) {
+                ami = false;
+                System.out.println(nom + " n'est plus proche du personnage, l'amitié est rompue.");
+            }
+        }
+    }
+
+    public void resetCompteurNourrituresPersonnage() {
+        this.compteurNourrituresPersonnage = 0;
+        System.out.println("Le compteur de nourritures près du personnage a été réinitialisé.");
     }
 
 }

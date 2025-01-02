@@ -14,23 +14,9 @@ public class Singe extends Animal {
     public void afficher() {
         System.out.println(afficherSinge());
     }
-    @Override
-    public void seNourrir() {
-        etat.seNourrir();
-    }
 
-    @Override
-    public void apprivoiser() {
-        etat.apprivoiser();
-    }
-
-    @Override
-    public void recevoirCoup() {
-        etat.recevoirCoup();
-    }
     @Override
     public void agir(Carte carte) {
-        // L'écureuil agit selon son état actuel (affamé, rassasié, etc.)
         etat.agir(carte);
     }
 

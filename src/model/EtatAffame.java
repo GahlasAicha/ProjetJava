@@ -17,6 +17,7 @@ public class EtatAffame extends EtatAnimal {
         return instance;
     }
 
+
     @Override
     public void seNourrir() {
         if (animal == null) {
@@ -26,6 +27,10 @@ public class EtatAffame extends EtatAnimal {
         animal.setEtat(EtatARassasie.getInstance()); // Passe à l'état rassasié
     }
 
+
+
+
+
     @Override
     public void apprivoiser() {
         System.out.println(animal.getNom() + " ne peut pas être apprivoisé en étant affamé.");
@@ -33,7 +38,9 @@ public class EtatAffame extends EtatAnimal {
 
     @Override
     public void recevoirCoup() {
-        System.out.println(animal.getNom() + " est effrayé mais reste affamé.");
+        System.out.println(animal.getNom() + " a été frappé.");
+        animal.setAmi(false);  // Perdre l'amitié si frappé par le personnage
+        System.out.println(animal.getNom() + " perd son amitié avec le personnage.");
     }
 
     @Override
@@ -51,7 +58,7 @@ public class EtatAffame extends EtatAnimal {
         if (animal instanceof Ecureuil) {
             nourritures = new char[] {'G', 'C'}; // Nourritures pour écureuil
         } else if (animal instanceof Singe) {
-            nourritures = new char[] {'B', 'C'}; // Nourritures pour singe
+            nourritures = new char[] {'b', 'C'}; // Nourritures pour singe
         }
 
         // Chercher la nourriture parmi les cases adjacentes
@@ -88,7 +95,7 @@ public class EtatAffame extends EtatAnimal {
             case 'C':
                 System.out.println(animal.getNom() + " mange un champignon.");
                 break;
-            case 'B':
+            case 'b':
                 System.out.println(animal.getNom() + " mange une banane.");
                 break;
             default:
@@ -137,7 +144,5 @@ public class EtatAffame extends EtatAnimal {
 
 
 }
-
-
 
 

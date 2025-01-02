@@ -128,7 +128,9 @@ public class Controller {
                 break;
             case 3:
                 break;
-
+            default:
+                ihm.afficherMessageErreur("Choix invalide.");
+                break;
         }
 
     }

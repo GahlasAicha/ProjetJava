@@ -24,9 +24,10 @@ public class EtatARassasie extends EtatAnimal {
 
         // Vérifie si l'animal doit redevenir affamé
         if (animal.getCompteurToursRassasie() >= toursAvantAffame) {
-            animal.setEtat(EtatAffame.getInstance());
             animal.resetCompteurToursRassasie();
-            return;
+            animal.setEtat(EtatAffame.getInstance());
+
+
         }
 
         // Déplacement dans une case vide si possible
@@ -40,10 +41,17 @@ public class EtatARassasie extends EtatAnimal {
 
         if (!casesVides.isEmpty()) {
             Case caseChoisie = casesVides.get(rand.nextInt(casesVides.size()));
+            int x = animal.getX();
+            int y = animal.getY();
             animal.setX(caseChoisie.getX());
             animal.setY(caseChoisie.getY());
-            caseChoisie.setAnimal(animal);  // Associer l'animal à la nouvelle case
+            caseChoisie.setContenu(animal.getSymbole());
+            //caseChoisie.setAnimal(animal);// Associer l'animal à la nouvelle case
+            carte.getCase(x,y).viderCase();
+            System.out.println(animal.getNom() + " se déplace à la position (" + x + ", " + y + ").Rass.");
+
         }
+        animal.incrementerCompteurToursRassasie();
     }
 
     @Override
@@ -54,7 +62,7 @@ public class EtatARassasie extends EtatAnimal {
     @Override
     public void apprivoiser() {
         System.out.println("L'animal rassasié est plus facile à apprivoiser.");
-        animal.setEtat(EtatAApprivoise.getInstance());
+
     }
 
     @Override
@@ -75,9 +83,20 @@ public class EtatARassasie extends EtatAnimal {
 
         // Si l'animal dépasse le nombre de tours avant de redevenir affamé, il redevient affamé
         if (animal.getCompteurToursRassasie() >= toursAvantAffame) {
+            System.out.println(animal.getNom()+ "est affame !");
             animal.setEtat(EtatAffame.getInstance());
             animal.resetCompteurToursRassasie();
         }
+
+       /* System.out.println(animal.getNom() + " se deplace");
+        int[] nouvellePosition = choisirCaseAleatoire(casesAdjacentes);
+        if (Carte.estCaseValide(nouvellePosition[0], nouvellePosition[1], carte.getHauteur(), carte.getLargeur()) &&
+                carte.getContenuCase(nouvellePosition[0], nouvellePosition[1]) == ' ') {
+            gererDeplacement(animal, carte, casesAdjacentes,rand, toursAvantAffame);
+        } else {
+            System.out.println(animal.getNom() + " ne peut pas se déplacer : la case choisie est invalide ou occupée.");
+        }*/
+
     }
 
     // Méthode pour gérer l'intelligence artificielle d'un écureuil en forêt
@@ -104,6 +123,16 @@ public class EtatARassasie extends EtatAnimal {
                 return;
             }
         }
+    }
+
+    private int[] choisirCaseAleatoire(List<int[]> casesAdjacentes) {
+        if (casesAdjacentes.isEmpty()) {
+            System.out.println(animal.getNom() + " ne peut pas se déplacer : aucune case adjacente valide.");
+            return new int[] {animal.getX(), animal.getY()}; // Rester sur place
+        }
+
+        Random random = new Random();
+        return casesAdjacentes.get(random.nextInt(casesAdjacentes.size()));
     }
 }
 

@@ -148,7 +148,6 @@ public class Partie {
             try {
                 animal.getEtat().setAnimal(animal);
                 animal.agir(carte);
-                animal.incrementerCompteurToursRassasie();
             } catch (Exception e) {
                 System.err.println("Erreur lors de l'action de " + (animal != null ? animal.getNom() : "animal null") + ": " + e.getMessage());
             }
