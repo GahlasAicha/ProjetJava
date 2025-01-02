@@ -38,79 +38,106 @@ public class EtatAffame extends EtatAnimal {
 
     @Override
     public void agir(Carte carte) {
+        if (animal == null || carte == null) {
+            throw new IllegalStateException("L'animal ou la carte est null.");
+        }
+        System.out.println("Nombre d'animaux avant l'action : " + carte.compterAnimaux());
         System.out.println(animal.getNom() + " cherche de la nourriture.");
 
-        // Liste des nourritures à chercher : Gland, Champignon, Banane
-        char[] nourritures = {'G', 'C', 'B'}; // Gland, Champignon, Banane
+        char[] nourritures = {'G', 'C'};  // Définir les nourritures possibles
+        List<int[]> casesAdjacentes = Carte.obtenirCasesAdjacentes(animal.getX(), animal.getY(), carte.getHauteur(), carte.getLargeur());
 
-        // Recherche de la nourriture autour de l'animal
-        List<int[]> casesAdjacentes = Carte.obtenirCasesAdjacentes(animal.getX(), animal.getY());
-
-        // Comportement spécifique de l'écureuil (Forêt)
+        // Définir les nourritures spécifiques pour les animaux
         if (animal instanceof Ecureuil) {
-            chercherNourritureEcureuil(carte, nourritures, casesAdjacentes);
+            nourritures = new char[] {'G', 'C'}; // Nourritures pour écureuil
+        } else if (animal instanceof Singe) {
+            nourritures = new char[] {'B', 'C'}; // Nourritures pour singe
         }
 
-        // Comportement spécifique du singe (Jungle)
-        else if (animal instanceof Singe) {
-            chercherNourritureSinge(carte, nourritures, casesAdjacentes);
+        // Chercher la nourriture parmi les cases adjacentes
+        for (char nourriture : nourritures) {
+            for (int[] caseAdj : casesAdjacentes) {
+                if (Carte.estCaseValide(caseAdj[0], caseAdj[1], carte.getHauteur(), carte.getLargeur()) &&
+                        carte.getContenuCase(caseAdj[0], caseAdj[1]) == nourriture) {
+                    consommerNourriture(nourriture, caseAdj, carte);
+                    System.out.println("Nombre d'animaux après consommation : " + carte.compterAnimaux());
+                    return; // Action terminée
+                }
+            }
         }
 
-        // Si aucune nourriture n'est trouvée, se déplacer aléatoirement
-        System.out.println(animal.getNom() + " ne trouve rien et se déplace aléatoirement.");
+        // Si aucun aliment n'est trouvé, l'animal se déplace aléatoirement
+        System.out.println(animal.getNom() + " ne trouve rien et tente de se déplacer aléatoirement.");
         int[] nouvellePosition = choisirCaseAleatoire(casesAdjacentes);
-        deplacerAnimal(animal, nouvellePosition[0], nouvellePosition[1]);
+        if (Carte.estCaseValide(nouvellePosition[0], nouvellePosition[1], carte.getHauteur(), carte.getLargeur()) &&
+                carte.getContenuCase(nouvellePosition[0], nouvellePosition[1]) == ' ') {
+            deplacerAnimal(animal, nouvellePosition[0], nouvellePosition[1], carte);
+        } else {
+            System.out.println(animal.getNom() + " ne peut pas se déplacer : la case choisie est invalide ou occupée.");
+        }
+
+        // Afficher le nombre exact d'animaux après l'action
+        System.out.println("Nombre d'animaux dans la carte après l'action : " + carte.compterAnimaux());
     }
 
-    // Comportement de l'écureuil affamé
-    private void chercherNourritureEcureuil(Carte carte, char[] nourritures, List<int[]> casesAdjacentes) {
-        for (char nourriture : nourritures) {
-            for (int[] caseAdj : casesAdjacentes) {
-                if (carte.getContenuCase(caseAdj[0], caseAdj[1]) == nourriture) {
-                    if (nourriture == 'G') {
-                        System.out.println("L'écureuil mange un gland.");
-                    } else if (nourriture == 'C') {
-                        System.out.println("L'écureuil mange un champignon.");
-                    }
-                    deplacerAnimal(animal, caseAdj[0], caseAdj[1]);
-                    animal.setEtat(EtatARassasie.getInstance()); // L'écureuil devient rassasié
-                    return;
-                }
-            }
+    private void consommerNourriture(char nourriture, int[] position, Carte carte) {
+        switch (nourriture) {
+            case 'G':
+                System.out.println(animal.getNom() + " mange un gland.");
+                break;
+            case 'C':
+                System.out.println(animal.getNom() + " mange un champignon.");
+                break;
+            case 'B':
+                System.out.println(animal.getNom() + " mange une banane.");
+                break;
+            default:
+                System.out.println(animal.getNom() + " consomme une ressource inconnue.");
         }
+
+        carte.setCaseContenu(position[0], position[1], ' '); // Consomme la nourriture
+        deplacerAnimal(animal, position[0], position[1], carte); // Déplace l'animal
+        animal.setEtat(EtatARassasie.getInstance()); // Change d'état
     }
 
-    // Comportement du singe affamé
-    private void chercherNourritureSinge(Carte carte, char[] nourritures, List<int[]> casesAdjacentes) {
-        for (char nourriture : nourritures) {
-            for (int[] caseAdj : casesAdjacentes) {
-                if (carte.getContenuCase(caseAdj[0], caseAdj[1]) == nourriture) {
-                    if (nourriture == 'B') {
-                        System.out.println("Le singe mange une banane.");
-                    } else if (nourriture == 'C') {
-                        System.out.println("Le singe mange un champignon.");
-                    }
-                    deplacerAnimal(animal, caseAdj[0], caseAdj[1]);
-                    animal.setEtat(EtatARassasie.getInstance()); // Le singe devient rassasié
-                    return;
-                }
-            }
-        }
-    }
 
     // Méthode pour choisir une case aléatoire parmi les cases adjacentes
     private int[] choisirCaseAleatoire(List<int[]> casesAdjacentes) {
+        if (casesAdjacentes.isEmpty()) {
+            System.out.println(animal.getNom() + " ne peut pas se déplacer : aucune case adjacente valide.");
+            return new int[] {animal.getX(), animal.getY()}; // Rester sur place
+        }
+
         Random random = new Random();
         return casesAdjacentes.get(random.nextInt(casesAdjacentes.size()));
     }
 
-    private void deplacerAnimal(Animal animal, int i, int i1) {
-        animal.setX(i); // Met à jour la position x de l'animal
-        animal.setY(i1); // Met à jour la position y de l'animal
-        System.out.println(animal.getNom() + " se déplace à la position (" + i + ", " + i1 + ").");
+
+
+
+    private void deplacerAnimal(Animal animal, int x, int y, Carte carte) {
+        // Vérifie si les nouvelles coordonnées sont valides et à l'intérieur des limites de la carte
+        if (!Carte.estCaseValide(x, y, carte.getHauteur(), carte.getLargeur())) {
+            System.out.println(animal.getNom() + " ne peut pas se déplacer hors des limites.");
+            return; // L'animal ne bouge pas si la case n'est pas valide, il reste sur place
+        }
+
+        // Si le déplacement est valide, libère la case de l'ancienne position
+        carte.setCaseContenu(animal.getX(), animal.getY(), ' ');
+
+        // Met à jour les coordonnées de l'animal
+        animal.setX(x);
+        animal.setY(y);
+
+        // Place l'animal dans la nouvelle case
+        carte.setCaseContenu(x, y, animal.getSymbole());
+        System.out.println(animal.getNom() + " se déplace à la position (" + x + ", " + y + ").");
     }
 
+
+
 }
+
 
 
 

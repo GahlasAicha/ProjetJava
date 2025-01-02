@@ -8,12 +8,11 @@ public class Case {
     private Objet objet ;
     /**
      * Constructeur pour créer une nouvelle case.
-     *
-     * @param x       La coordonnée X de la case.
-     * @param y       La coordonnée Y de la case.
-     * @param symbole
+     * @param x La coordonnée X de la case.
+     * @param y La coordonnée Y de la case.
+     * @param contenu Le contenu initial de la case ('.' si vide, autre symbole sinon).
      */
-    public Case(int x, int y, char symbole){
+    public Case(int x, int y,char contenu){
         this.x=x;
         this.y=y;
         this.contenu=contenu;

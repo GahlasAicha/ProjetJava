@@ -1,22 +1,21 @@
 package model;
 
 public class Ecureuil extends Animal {
-    // Constructeur avec position
+
+
+
     public Ecureuil(int positionX, int positionY) {
         super("Écureuil", 'E', positionX, positionY);
         setEtat(EtatAffame.getInstance()); // Par défaut, un écureuil commence affamé
     }
 
 
-    public String afficherEcureuil() {
-        return "Nom: " + getNom() + ", Position: (" + getX() + ", " + getY() + ")";
-    }
 
     @Override
     public void afficher() {
-        System.out.println(afficherEcureuil());
-    }
 
+        System.out.println("L'écureuil " + getNom() + " est à la position (" + getX() + ", " + getY() + ")");
+    }
     @Override
     public void seNourrir() {
         // Appel de la méthode de l'état actuel (affamé ou autre)

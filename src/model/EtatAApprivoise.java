@@ -59,7 +59,7 @@ public class EtatAApprivoise extends EtatAnimal {
 
     // Méthode pour choisir une case adjacente aléatoire (simple exemple)
     private int[] choisirCaseAleatoire(Carte carte) {
-        List<int[]> casesAdjacentes = Carte.obtenirCasesAdjacentes(animal.getX(), animal.getY());
+        List<int[]> casesAdjacentes = Carte.obtenirCasesAdjacentes(animal.getX(), animal.getY(), carte.getHauteur(), carte.getLargeur());
         return casesAdjacentes.get((int) (Math.random() * casesAdjacentes.size()));
     }
 

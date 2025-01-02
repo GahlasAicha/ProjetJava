@@ -1,24 +1,25 @@
 package model;
 
+import util.Couleurs;
+
 import java.util.ArrayList;
 
 public class Personnage {
     private String nom;
-    private char symbole;
+    private final char symbole;
+    private final String couleur= Couleurs.ANSI_PURPLE + Couleurs.ANSI_WHITE_BACKGROUND;
     private int x,y;
     private ArrayList<Objet> inventaire;
     private boolean estVivant;
     private ArrayList<Animal> amis; // Liste des animaux amis
-    public Personnage(String nom, int x, int y) {
-        this.nom = nom;
-        this.inventaire = new ArrayList<>();
-        this.amis = new ArrayList<Animal>();
-        this.x = x;
-        this.y = y;
-        this.symbole = '@';
-        this.estVivant = true;  // Initialisation de l'état du personnage
+    public Personnage(String nom,int x,int y) {
+        this.nom=nom;
+        this.inventaire=new ArrayList<>();
+        this.amis=new ArrayList<Animal>();
+        this.x= x;
+        this.y=y;
+        this.symbole='@';
     }
-
 
 
     public void seDeplacer(int dX, int dY) {
@@ -52,7 +53,7 @@ public class Personnage {
         return objet;
     }
 
-    public void nourrirAnimal(Objet nourriture, Animal animal ) {
+    public void nourrirAnimal(Objet nourriture) {
         // si la nouriture est presente
         if (inventaire.contains(nourriture)) {
             System.out.println(nom + " nourrit l'animal avec " + nourriture);
@@ -93,6 +94,10 @@ public class Personnage {
         this.y = y;
     }
 
+    public String getCouleur() {
+        return couleur;
+    }
+
     public boolean isEstVivant() {
         return estVivant;
     }
@@ -101,9 +106,7 @@ public class Personnage {
         this.estVivant = estVivant;
     }
 
-    public char getSymbole() {
-        return symbole;
-    }
+
     public ArrayList<Animal> getAmis(){
         return amis;
     }

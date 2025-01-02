@@ -1,12 +1,16 @@
 package model;
 
+import util.Couleurs;
+
 public  abstract class Animal {
     private  String nom;
     private char symbole;
+    private String couleur =  Couleurs.ANSI_PURPLE+ Couleurs.ANSI_YELLOW_BACKGROUND;
     private  int x, y;
     protected EtatAnimal etat;
     private boolean ami ;
-    private int compteurTour=0;
+    private int compteurToursRassasie = 0; // Compte les tours rassasié
+    private int compteurNourrituresPersonnage = 0; // Compte les nourritures près du personnage
 
     public Animal(String nom, char symbole, int x, int y) {
 
@@ -19,33 +23,16 @@ public  abstract class Animal {
     }
 
 
-
-    // Méthodes abstraites
-    public abstract void afficher();
-
-    // Méthodes déléguées à l'état
-    public void seNourrir() {
-        etat.seNourrir();
+    public void deplacerAnimal(int x, int y, Carte carte) {
+        if (carte.estPositionValide(x, y)) {
+            this.x = x;
+            this.y = y;
+            System.out.println(this.nom + " se déplace à la position (" + x + ", " + y + ")");
+        } else {
+            System.out.println(this.nom + " ne peut pas se déplacer à (" + x + ", " + y + ") : hors limites.");
+        }
     }
 
-    public void apprivoiser() {
-        etat.apprivoiser();
-    }
-
-    public void recevoirCoup() {
-        etat.recevoirCoup();
-    }
-
-    public void agir(Carte carte) {
-        etat.agir(carte);
-    }
-
-    public void deplacerAnimal(int x, int y){
-        this.x=x;
-        this.y=y;
-        System.out.println(this.nom + " se déplace à la position (" + x + ", " + y + "");
-
-    }
 
 
     // les getters et setters
@@ -83,6 +70,9 @@ public  abstract class Animal {
         return symbole;
     }
 
+    public String getCouleur() {
+        return couleur;
+    }
 
     public void setEtat(EtatAnimal etat) {
         if (etat == null) {
@@ -92,18 +82,6 @@ public  abstract class Animal {
         this.etat.setAnimal(this); // Associe cet animal à l'état
     }
 
-
-    public void incrementerCompteur() {
-
-        compteurTour++;
-    }
-
-    public int getCompteurTour() {
-        return compteurTour;
-    }
-    public void resetCompteur() {
-        compteurTour = 0;
-    }
 
     // Méthode pour définir la nouvelle position de l'animal
     public void setPosition(int x, int y) {
@@ -126,12 +104,51 @@ public  abstract class Animal {
         return distanceX <= 1 && distanceY <= 1;
     }
 
-    public void setAmi(boolean b) {
-        this.ami = b;
+
+    // Méthodes pour gérer les compteurs et l'amitié
+    public void incrementerCompteurToursRassasie() {
+        compteurToursRassasie++;
     }
 
-    // Méthode pour obtenir si l'animal est ami ou non
+    public int getCompteurToursRassasie() {
+        return compteurToursRassasie;
+    }
+
+    public void resetCompteurToursRassasie() {
+        compteurToursRassasie = 0;
+    }
+
+    public void incrementerCompteurNourrituresPersonnage() {
+        compteurNourrituresPersonnage++;
+    }
+
+    public int getCompteurNourrituresPersonnage() {
+        return compteurNourrituresPersonnage;
+    }
+
+    public void setAmi(boolean ami) {
+        this.ami = ami;
+    }
+
     public boolean estAmi() {
         return this.ami;
     }
+
+    // Méthodes abstraites
+    public abstract void afficher();
+
+    // Méthodes déléguées à l'état
+    public void seNourrir() {
+        etat.seNourrir();
+    }
+    public void apprivoiser() {
+        etat.apprivoiser();
+    }
+    public void recevoirCoup() {
+        etat.recevoirCoup();
+    }
+    public void agir(Carte carte) {
+        etat.agir(carte);
+    }
+
 }

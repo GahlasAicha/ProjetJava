@@ -7,9 +7,9 @@ public class Objet {
     public boolean estRamassable;
     int x,y;
 
-    public Objet(String nom,char symbol,boolean estRamassable,int x,int y ){
+    public Objet(String nom,char symbole,boolean estRamassable,int x,int y ){
         this.nom=nom;
-        this.symbole= symbol;
+        this.symbole= symbole;
         this.estRamassable=estRamassable;
         this.x=x;
         this.y=y;

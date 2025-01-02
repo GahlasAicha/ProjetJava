@@ -9,7 +9,7 @@ public class EtatARassasie extends EtatAnimal {
     private static final int TOURS_ECUREUIL = 5;   // Tours avant que l'écureuil redevienne affamé
     private static final int TOURS_SINGE = 3;      // Tours avant que le singe redevienne affamé
 
-    public EtatARassasie() {}
+    private EtatARassasie() {}
 
     public static EtatARassasie getInstance() {
         if (instance == null) {
@@ -20,12 +20,12 @@ public class EtatARassasie extends EtatAnimal {
 
     private void gererDeplacement(Animal animal, Carte carte ,List<int[]> casesAdjacentes, Random rand, int toursAvantAffame) {
         // Incrémente le compteur de tours pour cet animal
-        animal.incrementerCompteur();
+        animal.incrementerCompteurToursRassasie();
 
         // Vérifie si l'animal doit redevenir affamé
-        if (animal.getCompteurTour() >= toursAvantAffame) {
+        if (animal.getCompteurToursRassasie() >= toursAvantAffame) {
             animal.setEtat(EtatAffame.getInstance());
-            animal.resetCompteur();
+            animal.resetCompteurToursRassasie();
             return;
         }
 
@@ -66,18 +66,17 @@ public class EtatARassasie extends EtatAnimal {
     @Override
     public void agir(Carte carte) {
         // Récupérer les cases adjacentes sous forme de coordonnées
-        List<int[]> casesAdjacentes = carte.obtenirCasesAdjacentes(animal.getX(), animal.getY());
+        List<int[]> casesAdjacentes = Carte.obtenirCasesAdjacentes(animal.getX(), animal.getY(),carte.getHauteur(),carte.getLargeur());
         Random rand = new Random();
-
 
         // Si l'animal est un écureuil et est rassasié, il se déplace vers une case vide
         int toursAvantAffame = (animal instanceof Ecureuil) ? TOURS_ECUREUIL : TOURS_SINGE;
         gererDeplacement(animal, carte, casesAdjacentes, rand, toursAvantAffame);
 
         // Si l'animal dépasse le nombre de tours avant de redevenir affamé, il redevient affamé
-        if (animal.getCompteurTour() >= toursAvantAffame) {
+        if (animal.getCompteurToursRassasie() >= toursAvantAffame) {
             animal.setEtat(EtatAffame.getInstance());
-            animal.resetCompteur();
+            animal.resetCompteurToursRassasie();
         }
     }
 
@@ -101,7 +100,7 @@ public class EtatARassasie extends EtatAnimal {
                 System.out.println(animal.getNom() + " mange un " + typeNourriture + ".");
                 c.setObjet(null);  // L'animal mange l'objet
                 animal.setEtat(EtatARassasie.getInstance());  // L'animal devient rassasié
-                animal.resetCompteur();
+                animal.resetCompteurToursRassasie();
                 return;
             }
         }

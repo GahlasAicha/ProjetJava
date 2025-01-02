@@ -1,55 +1,46 @@
 package model;
-// on va utiliser le design pattern abstraite factory pour la classe factory ( creer des instances specifiques comme partie jungle et partie foret )
+// on va utiliser le design pattern factory pour la classe factory ( creer des instances specifiques comme partie jungle et partie foret )
 import java.util.ArrayList;
 import java.util.Scanner;
 
-/**
- * Classe abstraite représentant une partie du jeu.
- */
 public class Partie {
     protected Carte carte;
     private ArrayList<Animal> animaux;
-    private Personnage personnage;
     private ArrayList<Objet> objets;
     private boolean estEnCours;
-   private String theme ;
-    private String statut;
-    private int tours;
-    private int[] grille;
+    private String statut;// statut de la partie
+    private Personnage personnage;
+    private int tours; // compter tours
 
-    // Constructeur
+
     public Partie() {
+        this.personnage=new Personnage("surviver",2,2);
         this.animaux = new ArrayList<>();
         this.objets = new ArrayList<>();
         this.estEnCours = true;
-        this.statut="En cours ";
+        this.statut = "En cours ";
+        //initialiserPartie();
 
     }
-
-    public Partie(String theme, Personnage personnage) {
-        this.theme = theme;
-        this.personnage = personnage;
-    }
-
-
-
-    // Méthode pour ajouter un personnage sur la carte
-  /*  public void ajouterPersonnage(String nom, int x, int y) {
-        if (carte.getCase(x, y).getContenu() == ' ') {
-            this.personnage = new Personnage(nom, x, y);
-            carte.setCaseContenu(x, y, '@');  // Place le personnage sur la carte
+    public void ajouterPersonnage(String nom, int x, int y) {
+        if (carte.getCase(x, y).getContenu() == '@') {
+            this.personnage= new Personnage(nom, x, y);
+            carte.setCaseContenu(x, y, '@'); // Placez le personnage sur la carte
         } else {
             System.out.println("Impossible de placer le personnage : case occupée.");
         }
-    }*/
+    }
+
+
+
     public void ramasserObjet(int x, int y) {// on peut le metre dans class partie
-        if (getPersonnage().estEnface(x,y)) {
+        if (personnage.estEnface(x,y)) {
             Objet objet = getObjets(x,y);
             if (objet!=null) {
                 if (objet.isEstRamassable()) {
-                    getPersonnage().ramasserObjet(objet);
+                    personnage.ramasserObjet(objet);
                     enleverObjet(objet);
-                    getCarte().setCaseContenu(x, y, ' ');
+                    carte.setCaseContenu(x, y, ' ');
 
                 } else {
                     System.out.println("Cet objet n'est pas ramassable.");
@@ -61,8 +52,6 @@ public class Partie {
             System.out.println("Il n'y a rien à ramasser ici.");
         }
     }
-
-
 
     public void lancerObjet (int index, String direction){
         int nouvelleX = personnage.getX();
@@ -97,112 +86,111 @@ public class Partie {
         }
     }
 
+
     public void jeterObjet(int index, String direction) {
-            Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
 
 
-            // Calcul des nouvelles coordonnées en fonction de la direction
-            int nouvelleX = personnage.getX();
-            int nouvelleY = personnage.getY();
+        // Calcul des nouvelles coordonnées en fonction de la direction
+        int nouvelleX = personnage.getX();
+        int nouvelleY = personnage.getY();
 
-            switch (direction) {
-                case "haut":
-                    nouvelleX -= 1;  // Déplacement vers le haut
-                    break;
-                case "bas":
-                    nouvelleX += 1;  // Déplacement vers le bas
-                    break;
-                case "gauche":
-                    nouvelleY -= 1;  // Déplacement vers la gauche
-                    break;
-                case "droite":
-                    nouvelleY += 1;  // Déplacement vers la droite
-                    break;
-                default:
-                    System.out.println("Direction invalide, réessayez.");
-                    return;  // Quitter si la direction n'est pas valide
-            }
-
-            // Vérification si la case est vide avant de jeter l'objet
-            if (carte.getCase(nouvelleX, nouvelleY).getContenu() == ' ') {
-                // Le personnage jette l'objet
-                Objet objet = personnage.jeterObjet(index);
-                objets.add(objet);  // Ajouter l'objet dans la liste des objets
-
-                // Mettre à jour la carte avec la nouvelle position de l'objet
-                carte.setCaseContenu(nouvelleX, nouvelleY, objet.getSymbole());
-
-                System.out.println("L'objet a été jeté dans la direction " + direction + " à la position (" + nouvelleX + ", " + nouvelleY + ").");
-            } else {
-                System.out.println("La case " + direction + " est occupée, vous ne pouvez pas jeter l'objet ici.");
-            }
+        switch (direction) {
+            case "haut":
+                nouvelleX -= 1;  // Déplacement vers le haut
+                break;
+            case "bas":
+                nouvelleX += 1;  // Déplacement vers le bas
+                break;
+            case "gauche":
+                nouvelleY -= 1;  // Déplacement vers la gauche
+                break;
+            case "droite":
+                nouvelleY += 1;  // Déplacement vers la droite
+                break;
+            default:
+                System.out.println("Direction invalide, réessayez.");
+                return;  // Quitter si la direction n'est pas valide
         }
-    // Méthode pour déplacer le personnage avec gestion des exceptions
 
-    // Méthode pour déplacer le personnage avec gestion des exceptions
-    public void deplacerPersonnage(int dX, int dY) {
-        int nouvelleX = personnage.getX() + dX;
-        int nouvelleY = personnage.getY() + dY;
+        // Vérification si la case est vide avant de jeter l'objet
+        if (carte.getCase(nouvelleX, nouvelleY).getContenu() == ' ') {
+            // Le personnage jette l'objet
+            Objet objet = personnage.jeterObjet(index);
+            objets.add(objet);  // Ajouter l'objet dans la liste des objets
 
-        try {
-            // Vérifier si la position est valide (dans les limites de la carte)
-            if (!isPositionValide(nouvelleX, nouvelleY)) {
-                throw new DeplacementHorsLimitesException("La nouvelle position est hors des limites de la carte !");
-            }
+            // Mettre à jour la carte avec la nouvelle position de l'objet
+            carte.setCaseContenu(nouvelleX, nouvelleY, objet.getSymbole());
 
-            // Vérifier si la case est occupée
-            char caseContenu = carte.getCase(nouvelleX, nouvelleY).getContenu();
-            if (caseContenu != ' ') {
-                System.out.println("La case est occupée par un autre objet ou animal.");
-                return;
-            }
-
-            // Supprimer l'ancien emplacement du personnage
-            carte.setCaseContenu(personnage.getX(), personnage.getY(), ' ');
-
-            // Déplacer le personnage à la nouvelle position
-            personnage.seDeplacer(dX, dY);
-
-            // Ajouter le personnage à la nouvelle position
-            carte.setCaseContenu(nouvelleX, nouvelleY, '@');
-        } catch (DeplacementHorsLimitesException e) {
-            System.out.println(e.getMessage());  // Affiche l'erreur si la position est hors limites
+            System.out.println("L'objet a été jeté dans la direction " + direction + " à la position (" + nouvelleX + ", " + nouvelleY + ").");
+        } else {
+            System.out.println("La case " + direction + " est occupée, vous ne pouvez pas jeter l'objet ici.");
         }
     }
 
-    // Méthode pour vérifier si la position est dans les limites de la carte
-    private boolean isPositionValide(int x, int y) {
-        return x >= 0 && x < carte.getHauteur() && y >= 0 && y < carte.getLargeur();
-    }
-    // Méthode pour initialiser la carte avec animaux et objets
-    public void ajouterAnimal(Animal animal) {
-        animaux.add(animal);
-    }
 
-    public void ajouterObjet(Objet objet) {
-        objets.add(objet);
-    }
-
-    public void enleverObjet(Objet objet) {
-        objets.remove(objet);
-    }
-
-    // Méthode pour obtenir un objet à une position donnée
-    public Objet getObjets(int x, int y) {
-        for (Objet objet : objets) {
-            if (objet.getX() == x && objet.getY() == y) {
-                return objet;
-            }
-        }
-        return null;
-    }
 
     public Personnage getPersonnage() {
         return personnage;
     }
 
+
+    public int getTours() {
+        return tours;
+    }
+
+    public void setTours(int tours) {
+        this.tours = tours;
+        // Nettoyage de la liste pour retirer les objets null
+        animaux.removeIf(animal -> animal == null);
+
+        for (Animal animal : animaux) {
+            try {
+                animal.getEtat().setAnimal(animal);
+                animal.agir(carte);
+                animal.incrementerCompteurToursRassasie();
+            } catch (Exception e) {
+                System.err.println("Erreur lors de l'action de " + (animal != null ? animal.getNom() : "animal null") + ": " + e.getMessage());
+            }
+        }
+    }
+
+
+
     public Carte getCarte() {
         return carte;
+    }
+
+    public void setCarte(Carte carte) {
+        this.carte = carte;
+    }
+
+    public ArrayList<Animal> getAnimaux() {
+        return animaux;
+    }
+
+    public void setAnimaux(ArrayList<Animal> animaux) {
+        this.animaux = animaux;
+    }
+
+    public Objet getObjets(int x,int y) {
+        if (!objets.isEmpty()) {
+            for (Objet objet : objets) {
+                if (objet!=null) {
+                    if (objet.getX() == x && objet.getY() == y) {
+                        return objet;
+                    }
+                }
+            }
+        }else {
+            System.out.println("vous n'avez pas b'objets a disposition");
+        }
+        return null;
+
+    }
+
+    public void setObjets(ArrayList<Objet> objets) {
+        this.objets = objets;
     }
 
     public boolean isEstEnCours() {
@@ -212,27 +200,41 @@ public class Partie {
     public void setEstEnCours(boolean estEnCours) {
         this.estEnCours = estEnCours;
     }
-    // Méthode pour vérifier si la position est dans les limites de la carte
+    // Getter et Setter pour l'état de la partie (en cours ou terminée)
 
-    public void terminerPartie() {
-        this.estEnCours = false;
-        this.statut = "Terminée";
+    //les methodes
+    public void deplacerPersonage(int dX, int dY) {
+        int nouvelleX = personnage.getX() + dX;
+        int nouvelleY = personnage.getY() + dY;
+
+        // Vérifier si le déplacement est dans les limites de la carte
+        if (nouvelleX >= 0 && nouvelleX < carte.getHauteur() && nouvelleY >= 0 && nouvelleY < carte.getLargeur()) {
+            // Vérifier si la case n'est pas déjà occupée
+            char caseContenu = carte.getCase(nouvelleX, nouvelleY).getContenu();
+            if (caseContenu == ' ') {
+                carte.setCaseContenu(personnage.getX(), personnage.getY(), ' '); // Supprimer l'ancien emplacement
+                personnage.seDeplacer(dX, dY);
+                carte.setCaseContenu(nouvelleX, nouvelleY, '@'); // Ajouter le personnage à la nouvelle position
+            } else {
+                System.out.println("La case est occupée par un autre objet ou animal.");
+            }
+        } else {
+            System.out.println("Déplacement hors limites !");
+        }
     }
 
-    public String getTheme() {
-        return theme;
-    }
-    public int getTours() {
-        return tours;
-    }
 
-    public void setTours(int tours) {
-        this.tours = tours;
+    // Méthode pour initialiser les objets et animaux de la partie
+    public void ajouterAnimal(Animal animal) {
+        animaux.add(animal);
     }
 
+    public void ajouterObjet(Objet objet) {
+        objets.add(objet);
+    }
 
-    public Partie getPartie() {
-        return this;
+    public void enleverObjet(Objet objet){
+        objets.remove(objet);
     }
 
 
