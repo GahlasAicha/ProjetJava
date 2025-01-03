@@ -11,15 +11,23 @@ public class Controller {
     FabriqueAbstraitePartie fabriquepartie;
     private Ihm ihm;
 
-    public Controller( Ihm ihm){
-        int choi=ihm.lireEntreeEntier("choisissez un theme: \n1. Foret \n2. Jungle \n");
-        int choi2=ihm.lireEntreeEntier("avez vous une carte existante? \n1. oui \n2. non \n");
-        if (choi==1){
-            fabriquepartie = new FabriquePartieForet(partie,choi2);
-        }else {
-            fabriquepartie = new FabriquePartieJungle(partie,choi2);
+    public Controller( Ihm ihm) {
+        boolean choix =true;
+        while (choix){
+            int choi = ihm.lireEntreeEntier("choisissez un theme: \n1. Foret \n2. Jungle \n");
+
+            if (choi == 1) {
+                choix=false;
+                int choi2 = ihm.lireEntreeEntier("avez vous une carte existante? \n1. oui \n2. non \n");
+                fabriquepartie = new FabriquePartieForet(partie, choi2);
+            } else if (choi == 2) {
+                choix=false;
+                int choi2 = ihm.lireEntreeEntier("avez vous une carte existante? \n1. oui \n2. non \n");
+                fabriquepartie = new FabriquePartieJungle(partie, choi2);
+            } else ihm.afficherMessage("theme faux " + Couleurs.ANSI_RED);
+
         }
-        this.ihm=ihm;
+        this.ihm = ihm;
     }
 
     public void demarrerJeu(){
@@ -82,13 +90,33 @@ public class Controller {
         }
     }
 
-    private void interagir(){// 8/12
+    private void interagir() {
         ihm.afficherMessage("\nInteraction :");
-        int choix=ihm.lireEntreeEntier("\n1. ramasse un objet\n");
-        if (choix==1){
-            partie.ramasserObjet(partie.getPersonnage().getX()+1,partie.getPersonnage().getY());
-        }
+        int choix = ihm.lireEntreeEntier("\n1. Ramasser un objet\n2. Amitié avec un animal\n3. Frapper un animal\n");
+        switch (choix) {
+            case 1:
+                partie.ramasserObjet(partie.getPersonnage().getX() + 1, partie.getPersonnage().getY());
+                break;
+            case 2:
+                // Vérifier l'amitié des animaux à proximité
+                Carte carte = partie.getCarte(); // Récupère la carte
+                partie.checkAmitiePersonnage(carte); // Appelle la méthode pour gérer l'amitié des animaux
+                break;
 
+            case 3:
+                // Frapper un animal à proximité
+                Animal animalToFrapper = partie.getAnimalProche(partie.getPersonnage());
+                if (animalToFrapper != null) {
+                    partie.frapperAnimal(partie.getPersonnage(), animalToFrapper); // Assurez-vous que cette méthode existe dans la classe Partie
+                } else {
+                    ihm.afficherMessageErreur("Aucun animal à frapper.");
+                }
+                break;
+
+            default:
+                ihm.afficherMessageErreur("Choix invalide.");
+                break;
+        }
     }
 
     private void menuObjetAmi(){// 10/12

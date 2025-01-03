@@ -193,6 +193,9 @@ public class Carte {
         }
         return nombreAnimaux;
     }
+
+
+
 }
 
 

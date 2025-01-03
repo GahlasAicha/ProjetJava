@@ -68,7 +68,7 @@ public class PartieForet extends Partie{
 
 
 
-    public void ramasserObjet(int x, int y) {// on peut le metre dans class partie
+   /* public void ramasserObjet(int x, int y) {// on peut le metre dans class partie
         if (getPersonnage().estEnface(x,y)) {
             Objet objet = getObjets(x,y);
             if (objet!=null) {
@@ -86,7 +86,7 @@ public class PartieForet extends Partie{
         } else {
             System.out.println("Il n'y a rien à ramasser ici.");
         }
-    }
+    }*/
 }
 
 

@@ -7,18 +7,19 @@ import java.util.ArrayList;
 public class Personnage {
     private String nom;
     private final char symbole;
-    private final String couleur= Couleurs.ANSI_PURPLE + Couleurs.ANSI_WHITE_BACKGROUND;
-    private int x,y;
+    private final String couleur = Couleurs.ANSI_PURPLE + Couleurs.ANSI_WHITE_BACKGROUND;
+    private int x, y;
     private ArrayList<Objet> inventaire;
     private boolean estVivant;
     private ArrayList<Animal> amis; // Liste des animaux amis
-    public Personnage(String nom,int x,int y) {
-        this.nom=nom;
-        this.inventaire=new ArrayList<>();
-        this.amis=new ArrayList<Animal>();
-        this.x= x;
-        this.y=y;
-        this.symbole='@';
+
+    public Personnage(String nom, int x, int y) {
+        this.nom = nom;
+        this.inventaire = new ArrayList<>();
+        this.amis = new ArrayList<Animal>();
+        this.x = x;
+        this.y = y;
+        this.symbole = '@';
     }
 
 
@@ -30,25 +31,28 @@ public class Personnage {
 
     // les methodes
 
-    public boolean estEnface(int x,int y){
+    public boolean estEnface(int x, int y) {
         return this.x + 1 == x && this.y == y;
     }
+
     public void ramasserObjet(Objet objet) {
         // Ajoute un objet
         inventaire.add(objet);
         objet.setX(-1);
         objet.setY(-1);
     }
+
     public Objet reposerObjet(int index) {
         // Retire un objet de l'inventaire, s'il est présent
-        Objet objet= inventaire.remove(index);
-        objet.setX(this.x+1);
+        Objet objet = inventaire.remove(index);
+        objet.setX(this.x + 1);
         objet.setY(this.y);
         return objet;
     }
+
     public Objet jeterObjet(int index) {
-        Objet objet= inventaire.remove(index);
-        objet.setX(this.x+3);
+        Objet objet = inventaire.remove(index);
+        objet.setX(this.x + 3);
         objet.setY(this.y);
         return objet;
     }
@@ -107,7 +111,7 @@ public class Personnage {
     }
 
 
-    public ArrayList<Animal> getAmis(){
+    public ArrayList<Animal> getAmis() {
         return amis;
     }
 
@@ -119,5 +123,9 @@ public class Personnage {
     public void setInventaire(ArrayList<Objet> inventaire) {
         this.inventaire = inventaire;
     }
+    public String getNom() {
+        return this.nom;
+    }
+
 
 }

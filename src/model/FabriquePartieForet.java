@@ -32,6 +32,7 @@ public class FabriquePartieForet extends FabriqueAbstraitePartie {
                 switch (caseContenu) {
                     case '@':// cree un nouveu personnage dans l'emplacement initialise
                         partie.ajouterPersonnage("perso",i,j);
+                        break;
                     case 'E':
                         Ecureuil ecureuil = new Ecureuil(i, j);
                         partie.ajouterAnimal(ecureuil);// ajouter les animeux dans la list

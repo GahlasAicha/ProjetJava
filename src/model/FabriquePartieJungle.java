@@ -10,7 +10,6 @@ public class FabriquePartieJungle extends FabriqueAbstraitePartie{
         this.elements= new FabriqueElementsJungle();
         initialiserPartie(choix);
 
-
     }
 
 

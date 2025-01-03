@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -75,7 +76,7 @@ public class EtatAffame extends EtatAnimal {
 
         // Si aucun aliment n'est trouvé, l'animal se déplace aléatoirement
         System.out.println(animal.getNom() + " ne trouve rien et tente de se déplacer aléatoirement.");
-        int[] nouvellePosition = choisirCaseAleatoire(casesAdjacentes);
+        int[] nouvellePosition = choisirCaseAleatoire(casesAdjacentes,carte);
         if (Carte.estCaseValide(nouvellePosition[0], nouvellePosition[1], carte.getHauteur(), carte.getLargeur()) &&
                 carte.getContenuCase(nouvellePosition[0], nouvellePosition[1]) == ' ') {
             deplacerAnimal(animal, nouvellePosition[0], nouvellePosition[1], carte);
@@ -98,8 +99,6 @@ public class EtatAffame extends EtatAnimal {
             case 'b':
                 System.out.println(animal.getNom() + " mange une banane.");
                 break;
-            default:
-                System.out.println(animal.getNom() + " consomme une ressource inconnue.");
         }
 
         carte.setCaseContenu(position[0], position[1], ' '); // Consomme la nourriture
@@ -109,15 +108,27 @@ public class EtatAffame extends EtatAnimal {
 
 
     // Méthode pour choisir une case aléatoire parmi les cases adjacentes
-    private int[] choisirCaseAleatoire(List<int[]> casesAdjacentes) {
-        if (casesAdjacentes.isEmpty()) {
+    private int[] choisirCaseAleatoire(List<int[]> casesAdjacentes, Carte carte) {
+        List<int[]> casesValides = new ArrayList<>();
+
+        // Vérifier chaque case adjacente
+        for (int[] caseAdj : casesAdjacentes) {
+            if (Carte.estCaseValide(caseAdj[0], caseAdj[1], carte.getHauteur(), carte.getLargeur())) {
+                casesValides.add(caseAdj);
+            }
+        }
+
+        // Si aucune case valide, rester sur place
+        if (casesValides.isEmpty()) {
             System.out.println(animal.getNom() + " ne peut pas se déplacer : aucune case adjacente valide.");
             return new int[] {animal.getX(), animal.getY()}; // Rester sur place
         }
 
+        // Choisir une case valide aléatoire
         Random random = new Random();
-        return casesAdjacentes.get(random.nextInt(casesAdjacentes.size()));
+        return casesValides.get(random.nextInt(casesValides.size()));
     }
+
 
 
 

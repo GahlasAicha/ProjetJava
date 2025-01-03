@@ -14,17 +14,19 @@ public class Partie {
 
 
     public Partie() {
-        this.personnage=new Personnage("surviver",2,2);
+        this.personnage = new Personnage("surviver", 2, 2);
         this.animaux = new ArrayList<>();
         this.objets = new ArrayList<>();
         this.estEnCours = true;
         this.statut = "En cours ";
+
         //initialiserPartie();
 
     }
+
     public void ajouterPersonnage(String nom, int x, int y) {
         if (carte.getCase(x, y).getContenu() == '@') {
-            this.personnage= new Personnage(nom, x, y);
+            this.personnage = new Personnage(nom, x, y);
             carte.setCaseContenu(x, y, '@'); // Placez le personnage sur la carte
         } else {
             System.out.println("Impossible de placer le personnage : case occupée.");
@@ -32,11 +34,10 @@ public class Partie {
     }
 
 
-
     public void ramasserObjet(int x, int y) {// on peut le metre dans class partie
-        if (personnage.estEnface(x,y)) {
-            Objet objet = getObjets(x,y);
-            if (objet!=null) {
+        if (personnage.estEnface(x, y)) {
+            Objet objet = getObjets(x, y);
+            if (objet != null) {
                 if (objet.isEstRamassable()) {
                     personnage.ramasserObjet(objet);
                     enleverObjet(objet);
@@ -45,7 +46,7 @@ public class Partie {
                 } else {
                     System.out.println("Cet objet n'est pas ramassable.");
                 }
-            }else {
+            } else {
                 System.out.println("Il n'y a rien à ramasser ici.");
             }
         } else {
@@ -53,7 +54,7 @@ public class Partie {
         }
     }
 
-    public void lancerObjet (int index, String direction){
+    public void lancerObjet(int index, String direction) {
         int nouvelleX = personnage.getX();
         int nouvelleY = personnage.getY();
         // Déterminer la nouvelle position en fonction de la direction
@@ -129,7 +130,6 @@ public class Partie {
     }
 
 
-
     public Personnage getPersonnage() {
         return personnage;
     }
@@ -155,7 +155,6 @@ public class Partie {
     }
 
 
-
     public Carte getCarte() {
         return carte;
     }
@@ -172,16 +171,16 @@ public class Partie {
         this.animaux = animaux;
     }
 
-    public Objet getObjets(int x,int y) {
+    public Objet getObjets(int x, int y) {
         if (!objets.isEmpty()) {
             for (Objet objet : objets) {
-                if (objet!=null) {
+                if (objet != null) {
                     if (objet.getX() == x && objet.getY() == y) {
                         return objet;
                     }
                 }
             }
-        }else {
+        } else {
             System.out.println("vous n'avez pas b'objets a disposition");
         }
         return null;
@@ -225,16 +224,61 @@ public class Partie {
 
     // Méthode pour initialiser les objets et animaux de la partie
     public void ajouterAnimal(Animal animal) {
-        animaux.add(animal);
+        if (!animaux.contains(animal)) {
+            animaux.add(animal);
+        }
     }
 
     public void ajouterObjet(Objet objet) {
         objets.add(objet);
     }
 
-    public void enleverObjet(Objet objet){
+    public void enleverObjet(Objet objet) {
         objets.remove(objet);
     }
 
+    // Méthode pour que le personnage frappe un animal
+    public void frapperAnimal(Personnage personnage, Animal animal) {
+        // Vérifier si l'animal est dans la liste des animaux de la partie
+        if (!animaux.contains(animal)) {
+            System.out.println("L'animal n'est pas dans la partie.");
+            return;
+        }
 
+        // Vérifier si l'animal est proche du personnage
+        if (estProche(personnage, animal)) {
+            System.out.println(personnage.getNom() + " frappe " + animal.getNom() + "!");
+
+            // Appel à la méthode recevoirCoup de l'animal
+            animal.recevoirCoup();
+
+            // Réagir si l'animal perd son amitié
+            if (!animal.isAmi()) {
+                System.out.println(animal.getNom() + " n'est plus ami avec " + personnage.getNom() + ".");
+            }
+        } else {
+            System.out.println(animal.getNom() + " est trop loin pour être frappé.");
+        }
+    }
+
+    // Méthode pour vérifier si l'animal est proche du personnage
+    public boolean estProche(Personnage personnage, Animal animal) {
+        // Comparaison des positions (x, y) du personnage et de l'animal
+        return (Math.abs(personnage.getX() - animal.getX()) <= 1 && Math.abs(personnage.getY() - animal.getY()) <= 1);
+    }
+
+    public void checkAmitiePersonnage(Carte carte) {
+        for (Animal animal : animaux) {
+            animal.checkAmitie(carte);
+        }
+    }
+    public Animal getAnimalProche(Personnage personnage) {
+        for (Animal animal : animaux) {
+            // Vérifier si l'animal est proche du personnage
+            if (estProche(personnage, animal)) {
+                return animal; // Retourne l'animal qui est proche
+            }
+        }
+        return null; // Aucun animal n'est proche
+    }
 }

@@ -3,10 +3,10 @@ package model;
 import util.Couleurs;
 
 public  abstract class Animal {
-    private  String nom;
+    private String nom;
     private char symbole;
-    private String couleur =  Couleurs.ANSI_PURPLE+ Couleurs.ANSI_YELLOW_BACKGROUND;
-    private  int x, y;
+    private String couleur = Couleurs.ANSI_PURPLE + Couleurs.ANSI_YELLOW_BACKGROUND;
+    private int x, y;
     protected EtatAnimal etat;
     private boolean ami = false;
     private int compteurToursRassasie = 0; // Compte les tours rassasié
@@ -19,7 +19,7 @@ public  abstract class Animal {
         this.symbole = symbole;
         this.x = x;
         this.y = y;
-        this.etat=new EtatAffame();// par defaut l'animal est affamé
+        this.etat = new EtatAffame();// par defaut l'animal est affamé
 
     }
 
@@ -33,7 +33,6 @@ public  abstract class Animal {
             System.out.println(this.nom + " ne peut pas se déplacer à (" + x + ", " + y + ") : hors limites.");
         }
     }
-
 
 
     // les getters et setters
@@ -95,7 +94,7 @@ public  abstract class Animal {
     // Méthode pour vérifier si l'animal est proche du personnage
     public boolean estProchePersonnage(Carte carte) {
         int[] positionPersonnage = carte.getPositionPersonnage();
-        int[] positionAnimal = new int[] {this.x, this.y};
+        int[] positionAnimal = new int[]{this.x, this.y};
 
         int distance = Math.abs(positionAnimal[0] - positionPersonnage[0]) + Math.abs(positionAnimal[1] - positionPersonnage[1]);
         return distance <= 1;
@@ -134,9 +133,10 @@ public  abstract class Animal {
     public abstract void afficher();
 
     // Méthodes déléguées à l'état
-    public void seNourrir( ) {
+    public void seNourrir() {
         etat.seNourrir();
     }
+
     public void apprivoiser() {
         etat.apprivoiser();
     }
@@ -146,13 +146,12 @@ public  abstract class Animal {
         ami = false; // Si un coup est donné à l'animal, l'amitié est rompue
         System.out.println(nom + " n'est plus ami avec le personnage après avoir reçu un coup.");
     }
+
     public void agir(Carte carte) {
         etat.agir(carte);
     }
 
-    // méthode pour gérer l'amitié
-    // Méthode pour gérer l'amitié
-    // Méthode pour gérer l'amitié
+    // Méthode qui vérifie l'amitié en fonction de la proximité et de l'état
     public void checkAmitie(Carte carte) {
         if (estProchePersonnage(carte)) {
             if (this instanceof Ecureuil) {
@@ -183,9 +182,15 @@ public  abstract class Animal {
         }
     }
 
+    // Méthode isAmi qui retourne si l'animal est ami
+    public boolean isAmi() {
+        return ami;
+    }
+
     public void resetCompteurNourrituresPersonnage() {
         this.compteurNourrituresPersonnage = 0;
         System.out.println("Le compteur de nourritures près du personnage a été réinitialisé.");
     }
+
 
 }
