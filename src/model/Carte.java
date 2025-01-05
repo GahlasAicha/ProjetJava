@@ -195,6 +195,57 @@ public class Carte {
     }
 
 
+    public boolean estCaseVide(int x, int y) {
+        // Vérifie si les coordonnées sont valides
+        if (x < 0 || x >= hauteur || y < 0 || y >= largeur) {
+            return false; // Coordonnées hors de la carte
+        }
+        // Vérifie si le contenu de la case est un espace, ce qui signifie qu'elle est vide
+        return grille[x][y].getContenu() == ' ';
+    }
+    // Méthode pour vérifier si une case contient un arbre
+    public boolean estCaseAvecArbre(int x, int y) {
+        // Vérifier si les coordonnées (x, y) sont valides
+        if (x < 0 || x >= grille.length || y < 0 || y >= grille[0].length) {
+            return false; // Si les coordonnées sont hors de la carte, retourner false
+        }
+
+        // Vérifier si la case à la position (x, y) contient un arbre
+        Case caseActuelle = grille[x][y];
+        return caseActuelle.contientArbre(); // Supposons que chaque case a une méthode `contientArbre` qui retourne un booléen
+    }
+
+    public void supprimerAnimal(Animal animal) {
+        if (animal == null) {
+            System.out.println("L'animal à supprimer est null.");
+            return;
+        }
+
+        // Obtenir la position de l'animal
+        int x = animal.getX();
+        int y = animal.getY();
+
+        // Vérifier si la position est valide
+        if (!estPositionValide(x, y)) {
+            System.out.println("Position de l'animal invalide !");
+            return;
+        }
+
+        // Vérifier si la case contient bien cet animal
+        Case caseActuelle = grille[x][y];
+        char contenuCase = caseActuelle.getContenu();
+
+        // Vérifier si la case contient l'animal spécifique
+        if ((contenuCase == 'E' && animal instanceof Ecureuil) ||
+                (contenuCase == 'S' && animal instanceof Singe)) {
+            caseActuelle.setContenu(' '); // La case redevient vide
+            System.out.println("L'animal " + animal.getClass().getSimpleName() + " a été supprimé de la carte.");
+        } else {
+            System.out.println("Aucun " + animal.getClass().getSimpleName() + " n'est présent à la position spécifiée.");
+        }
+    }
+
+
 
 }
 

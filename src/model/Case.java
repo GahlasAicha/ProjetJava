@@ -5,7 +5,8 @@ public class Case {
     private char contenu; // si la case est vide c le char .  si c  c un symbole nah le symbole
     private boolean estOccupee;
     private Animal animal;
-    private Objet objet ;
+    private static Objet objet ;
+    private boolean contientArbre;
     /**
      * Constructeur pour créer une nouvelle case.
      * @param x La coordonnée X de la case.
@@ -95,4 +96,26 @@ public class Case {
     public void setObjet(Objet objet) {
         this.objet = objet;
     }
+    // Méthode pour vérifier si la case contient un arbre
+    public boolean contientArbre() {
+        return objet != null && objet.getSymbole() == 'A';  // Vérifier si l'objet dans la case est un arbre
+    }
+
+    public boolean contientBuisson() {
+        return objet != null && objet.getSymbole()=='B';
+    }
+    public boolean contientCocotier() {
+        return objet != null && objet.getSymbole()=='C';
+    }
+    public static boolean estSousRocher(Case caseSinge) {
+        // Vérifie si la case du singe contient un rocher
+        return caseSinge != null && caseSinge.contientRocher();
+    }
+
+    public boolean contientRocher() {
+        // Vérifie si la case contient un objet de type rocher (symbole 'P')
+        return objet != null && objet.getSymbole() == 'P';
+    }
+
+
 }

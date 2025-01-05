@@ -191,6 +191,6 @@ public  abstract class Animal {
         this.compteurNourrituresPersonnage = 0;
         System.out.println("Le compteur de nourritures près du personnage a été réinitialisé.");
     }
-
-
 }
+
+
