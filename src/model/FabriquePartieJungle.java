@@ -3,16 +3,18 @@ package model;
 import java.io.IOException;
 
 public class FabriquePartieJungle extends FabriqueAbstraitePartie{
-    private Partie partie;
-    private FabriqueElementsJungle elements; // on a pas besoin d'une vzriable carte car on a carte dans
-    public FabriquePartieJungle(Partie partie, int choix) {
+    private final Partie partie;
+    private FabriqueElementsJungle elements;
+    public FabriquePartieJungle(Partie partie, int choix, int choix2) {
         this.partie=partie;
-        this.elements= new FabriqueElementsJungle();
-        initialiserPartie(choix);
+        if (choix2==2) {
+            this.elements = new FabriqueElementsJungle();
+        }else if (choix2==1){
+            this.elements = new FabriqueElementsJungleDanger();
+        }
+        initialiserPartie(choix,choix2);
 
     }
-
-
 
     @Override
     public void initialiserCarte(int hauteur, int largeur) { // 01/01 j'ai change creeCarte par initialiserCarte
@@ -35,6 +37,10 @@ public class FabriquePartieJungle extends FabriqueAbstraitePartie{
                         Singe singe = (Singe) elements.creerAnimal(caseContenu, i, j);
                         partie.ajouterAnimal(singe);
                         break;
+                    case 'V','D':
+                        Predateur predateur =elements.creerPredateur(caseContenu,i,j,partie.getCarte());
+                        partie.ajouterPredateur(predateur);
+                        break;
                     case ' ':
                         break;
                     default:
@@ -45,18 +51,21 @@ public class FabriquePartieJungle extends FabriqueAbstraitePartie{
             }
         }
     }
-    public void initialiserPartie(int choix) {
+    public void initialiserPartie(int choix, int choix2) {
         if (choix==1){
-            getCarteExistente(10,32);
+            getCarteExistente(35,100,choix2);
         }else {
             initialiserCarte(35, 100);
         }
         initialiserElements();
     }
-    protected void getCarteExistente(int hauteur, int largeur) {
+    protected void getCarteExistente(int hauteur, int largeur, int choix) {
         partie.setCarte(new Carte(hauteur, largeur));
         try {
-            partie.getCarte().chargerDepuisFichier("carte_jungle.txt");
+            if (choix ==1){
+                partie.getCarte().chargerDepuisFichier("carte_jungle_danger.txt");
+            } else
+                partie.getCarte().chargerDepuisFichier("carte_jungle.txt");
         } catch (IOException e) {
             System.err.println("Erreur lors du chargement de la carte depuis le fichier : " + e.getMessage());
             throw new RuntimeException(e);

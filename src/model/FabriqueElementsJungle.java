@@ -11,6 +11,11 @@ public class FabriqueElementsJungle extends FabriqueElements{
     }
 
     @Override
+    public Predateur creerPredateur(char symbole, int x, int y, Carte carte) {
+        return null;
+    }
+
+    @Override
     public Objet creerObjet(char symbole, int x, int y) {
         switch (symbole) {
             case 'b': return new Objet("Banane", 'b', true,x,y);

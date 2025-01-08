@@ -7,6 +7,7 @@ import java.util.Random;
 public class Serpent extends Predateur {
     private boolean enDigestion = false;
     private int compteurDigestion = 0;
+    private char sy=' ';
     public Serpent(String nom, int x, int y, Carte carte) {
         super("Serpent", x, y, carte);
     }
@@ -45,9 +46,12 @@ public class Serpent extends Predateur {
             // Si la position est invalide, revenir à la position précédente
             this.setX(ancienneX);
             this.setY(ancienneY);
-            System.out.println("Le hibou a tenté de sortir de la carte, il revient à sa position initiale.");
+            System.out.println("Le serpent a tenté de sortir de la carte, il revient à sa position initiale.");
         } else {
-            System.out.println("Le hibou se déplace de 2 cases dans la direction " + direction);
+            carte.setCaseContenu(ancienneX,ancienneY,sy);
+            sy=carte.getContenuCase(x,y);
+            carte.setCaseContenu(x,y,'V');
+            System.out.println("Le serpent se déplace de 2 cases dans la direction " + direction);
         }
     }
 
@@ -154,5 +158,6 @@ public class Serpent extends Predateur {
 
 
 }
+
 
 

@@ -11,23 +11,22 @@ public class Controller {
     FabriqueAbstraitePartie fabriquepartie;
     private Ihm ihm;
 
-    public Controller( Ihm ihm) {
-        boolean choix =true;
-        while (choix){
+    public Controller( Ihm ihm){
+        boolean tmp=true;
+        while (tmp) {
             int choi = ihm.lireEntreeEntier("choisissez un theme: \n1. Foret \n2. Jungle \n");
+            int choi3= ihm.lireEntreeEntier("choisissez la difficulte: \n1. avec Danger \n2. sans Danger\n");
+            int choi2 = ihm.lireEntreeEntier("avez vous une carte existante? \n1. oui \n2. non \n");
+            if (choi == 1 && (choi2==1 || choi2==2)) {
+                fabriquepartie = new FabriquePartieForet(partie, choi2, choi3);
+                tmp = false;
 
-            if (choi == 1) {
-                choix=false;
-                int choi2 = ihm.lireEntreeEntier("avez vous une carte existante? \n1. oui \n2. non \n");
-                fabriquepartie = new FabriquePartieForet(partie, choi2);
-            } else if (choi == 2) {
-                choix=false;
-                int choi2 = ihm.lireEntreeEntier("avez vous une carte existante? \n1. oui \n2. non \n");
-                fabriquepartie = new FabriquePartieJungle(partie, choi2);
-            } else ihm.afficherMessage("theme faux " + Couleurs.ANSI_RED);
-
+            } else if (choi == 2 && (choi2==1 || choi2==2)){
+                fabriquepartie = new FabriquePartieJungle(partie, choi2, choi3);
+                tmp=false;
+            } else ihm.afficherMessage("coix invalide!");
         }
-        this.ihm = ihm;
+        this.ihm=ihm;
     }
 
     public void demarrerJeu(){
@@ -90,33 +89,13 @@ public class Controller {
         }
     }
 
-    private void interagir() {
+    private void interagir(){// 8/12
         ihm.afficherMessage("\nInteraction :");
-        int choix = ihm.lireEntreeEntier("\n1. Ramasser un objet\n2. Amitié avec un animal\n3. Frapper un animal\n");
-        switch (choix) {
-            case 1:
-                partie.ramasserObjet(partie.getPersonnage().getX() + 1, partie.getPersonnage().getY());
-                break;
-            case 2:
-                // Vérifier l'amitié des animaux à proximité
-                Carte carte = partie.getCarte(); // Récupère la carte
-                partie.checkAmitiePersonnage(carte); // Appelle la méthode pour gérer l'amitié des animaux
-                break;
-
-            case 3:
-                // Frapper un animal à proximité
-                Animal animalToFrapper = partie.getAnimalProche(partie.getPersonnage());
-                if (animalToFrapper != null) {
-                    partie.frapperAnimal(partie.getPersonnage(), animalToFrapper); // Assurez-vous que cette méthode existe dans la classe Partie
-                } else {
-                    ihm.afficherMessageErreur("Aucun animal à frapper.");
-                }
-                break;
-
-            default:
-                ihm.afficherMessageErreur("Choix invalide.");
-                break;
+        int choix=ihm.lireEntreeEntier("\n1. ramasse un objet\n");
+        if (choix==1){
+            partie.ramasserObjet(partie.getPersonnage().getX()+1,partie.getPersonnage().getY());
         }
+
     }
 
     private void menuObjetAmi(){// 10/12
@@ -156,9 +135,7 @@ public class Controller {
                 break;
             case 3:
                 break;
-            default:
-                ihm.afficherMessageErreur("Choix invalide.");
-                break;
+
         }
 
     }

@@ -1,8 +1,9 @@
 package model;
 
 public class Renard extends Predateur {
-     private Carte carte;
+
     private Ecureuil ecureuil;
+    private char sy=' ';
 
     public Renard(int x, int y,Carte carte ) {
         super("Renard", x, y,carte);
@@ -11,6 +12,7 @@ public class Renard extends Predateur {
 
     @Override
     public void deplacer() {
+
         // Liste des directions possibles
         int[] directionsX = {1, -1, 0, 0};
         int[] directionsY = {0, 0, 1, -1};
@@ -19,13 +21,18 @@ public class Renard extends Predateur {
         for (int i = 0; i < 4; i++) {
             // Choisir une direction aléatoire
             int direction = (int) (Math.random() * 4);
-            int newX = x + directionsX[direction];
-            int newY = y + directionsY[direction];
+            int newX = this.x + directionsX[direction];
+            int newY = this.y + directionsY[direction];
 
             // Vérifier si la case est vide avant de déplacer le renard
+
             if (carte.estCaseVide(newX, newY)) {
-                x = newX;
-                y = newY;
+                carte.setCaseContenu(x,y,sy);
+                this.x = newX;
+                this.y = newY;
+                sy= carte.getContenuCase(x,y);
+                carte.setCaseContenu(x,y,'R');
+
                 System.out.println(nom + " se déplace à la position (" + x + ", " + y + ")");
                 return; // Le renard se déplace et la méthode termine
             }
@@ -40,7 +47,7 @@ public class Renard extends Predateur {
     public void attaquer(Animal animal) {
         // Vérifier si l'animal est un écureuil
         if (animal instanceof Ecureuil) {
-            Ecureuil ecureuil = (Ecureuil) animal;
+            ecureuil = (Ecureuil) animal;
             if (ecureuil.estEffraye()) {
                 System.out.println(nom + " ne peut pas attaquer, " + ecureuil.getNom() + " est déjà effrayé.");
                 return; // L'écureuil est effrayé, l'attaque échoue
@@ -64,6 +71,14 @@ public class Renard extends Predateur {
             // Si aucune case avec un arbre n'est trouvée, tuer l'écureuil
             System.out.println(nom + " attaque et tue " + ecureuil.getNom() + ".");
             carte.supprimerAnimal(ecureuil); // Suppression de l'écureuil de la carte
+            if (carte.estCaseVide(ecureuil.getX(), ecureuil.getY())) {
+                carte.setCaseContenu(x, y,' ');
+                this.x = ecureuil.getX();
+                this.y = ecureuil.getY();
+                carte.setCaseContenu(x, y, 'R');
+            }
+
+
         } else {
             System.out.println(nom + " ne peut pas attaquer que des écureuils.");
             System.out.println("L'attaque du renard a échoué, l'écureuil s'échappe !");
@@ -86,4 +101,3 @@ public class Renard extends Predateur {
         System.out.println(nom + " est à la position (" + x + ", " + y + ")");
     }
 }
-

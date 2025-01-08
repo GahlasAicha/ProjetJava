@@ -7,7 +7,8 @@ import java.util.Random;
 
 public class Hibou extends Predateur{
     private boolean enRepos =false ;
-     private boolean estAuSol = false ;// verifier si il s'est reposer ou pas
+    private boolean estAuSol = false ;// verifier si il s'est reposer ou pas
+    private char sy=' ';
 
     public Hibou(int x, int y,Carte carte ) {
         super("Hibou",x, y,carte);
@@ -49,6 +50,7 @@ public class Hibou extends Predateur{
                 this.setX(this.getX() + 2);
                 break;
         }
+
         // Vérification si la nouvelle position est valide sur la carte
         if (!Predateur.estPositionValide(this.getX(), this.getY())) {
             // Si la position est invalide, revenir à la position précédente
@@ -56,6 +58,9 @@ public class Hibou extends Predateur{
             this.setY(ancienneY);
             System.out.println("Le hibou a tenté de sortir de la carte, il revient à sa position initiale.");
         } else {
+            carte.setCaseContenu(ancienneX,ancienneY,sy);
+            sy=carte.getContenuCase(x,y);
+            carte.setCaseContenu(x,y,'H');
             System.out.println("Le hibou se déplace de 2 cases dans la direction " + direction);
         }
     }
@@ -97,7 +102,7 @@ public class Hibou extends Predateur{
                         System.out.println("Le hibou tue l'écureuil !");
                         carte.supprimerAnimal(ecureuil);
                     }
-                    // apres une attaque le hibou il doit se reposer 
+                    // apres une attaque le hibou il doit se reposer
                     seReposer();
 
                 } else {

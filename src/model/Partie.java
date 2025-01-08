@@ -11,6 +11,8 @@ public class Partie {
     private String statut;// statut de la partie
     private Personnage personnage;
     private int tours; // compter tours
+    private ArrayList<Predateur> predateurs;
+
 
 
     public Partie() {
@@ -19,6 +21,7 @@ public class Partie {
         this.objets = new ArrayList<>();
         this.estEnCours = true;
         this.statut = "En cours ";
+        this.predateurs= new ArrayList<>();
 
         //initialiserPartie();
 
@@ -148,8 +151,26 @@ public class Partie {
             try {
                 animal.getEtat().setAnimal(animal);
                 animal.agir(carte);
+                attaquePredateur(animal);
             } catch (Exception e) {
                 System.err.println("Erreur lors de l'action de " + (animal != null ? animal.getNom() : "animal null") + ": " + e.getMessage());
+            }
+        }
+
+        for (Predateur predateur : predateurs) {
+            if (predateur!=null) {
+                System.out.println("predareeur bouge");
+                predateur.deplacer();
+            }
+        }
+
+    }
+
+    private void attaquePredateur(Animal animal){
+
+        for (Predateur predateur:predateurs){
+            if (predateur!=null) {
+                predateur.attaquer(animal);
             }
         }
     }
@@ -228,6 +249,7 @@ public class Partie {
             animaux.add(animal);
         }
     }
+    public void ajouterPredateur(Predateur predateur){predateurs.add(predateur);}
 
     public void ajouterObjet(Objet objet) {
         objets.add(objet);

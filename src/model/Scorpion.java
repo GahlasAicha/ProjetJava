@@ -8,6 +8,7 @@ public class Scorpion extends Predateur{
     private boolean sousRocher = false;  // Si le scorpion est caché sous un rocher
     private int compteurToursSousRocher = 0;  // Compteur de tours sous le rocher
     private int toursSansAttaque = 0;
+    private char sy=' ';
     public Scorpion(String nom ,int x, int y,Carte carte ) {
         super("Scorpion ",x, y,carte);
     }
@@ -37,8 +38,11 @@ public class Scorpion extends Predateur{
                 compteurToursSousRocher = 5;  // Le scorpion reste sous le rocher pendant 5 tours
                 System.out.println(nom + " est caché sous un petit rocher pendant 5 tours.");
             }
+            carte.setCaseContenu(x,y,sy);
             x = newX;
             y = newY;
+            sy= carte.getContenuCase(x,y);
+            carte.setCaseContenu(x,y,'D');
             System.out.println(nom + " se déplace à la position (" + x + ", " + y + ")");
             return; // Le renard se déplace et la méthode termine
         } else {
@@ -78,9 +82,11 @@ public class Scorpion extends Predateur{
 
             System.out.println(Couleurs.colorerTexte(nom + " change de couleur en  après avoir attaqué.", Couleurs.ANSI_PURPLE));
         }
-        }
-
     }
+
+}
+
+
 
 
 

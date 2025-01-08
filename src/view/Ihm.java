@@ -41,8 +41,8 @@ public class Ihm {
                     String backGroundColor;
                     switch (symbole) {
                         case '@': // Personnage
-                            couleur = Couleurs.ANSI_PURPLE;
-                            backGroundColor=Couleurs.ANSI_WHITE_BACKGROUND;
+                            couleur = Couleurs.ANSI_BLACK;
+                            backGroundColor=Couleurs.ANSI_PURPLE_BACKGROUND;
 
                             break;
                         case 'E': // Écureuil
@@ -65,6 +65,18 @@ public class Ihm {
                         case 'C': // Champignon
                             couleur = Couleurs.ANSI_RED;
                             backGroundColor=Couleurs.ANSI_WHITE_BACKGROUND;
+                            break;
+                        case 'M','L':
+                            couleur = Couleurs.ANSI_YELLOW;
+                            backGroundColor = Couleurs.ANSI_CYAN_BACKGROUND;
+                            break;
+                        case 'R','D':
+                            couleur= Couleurs.ANSI_BLACK;
+                            backGroundColor= Couleurs.ANSI_RED_BACKGROUND;
+                            break;
+                        case 'H','V':
+                            couleur= Couleurs.ANSI_WHITE;
+                            backGroundColor= Couleurs.ANSI_PURPLE_BACKGROUND;
                             break;
                         default:
                             couleur = Couleurs.ANSI_BLACK;
