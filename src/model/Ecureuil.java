@@ -71,9 +71,11 @@ public class Ecureuil extends Animal {
 
         // Parcourir toutes les cases adjacentes
         for (int i = 0; i < directionsX.length; i++) {
+            carte.setCaseContenu(getX(),getY(),' ');
             int newX = getX() + directionsX[i];
             int newY = getY() + directionsY[i];
 
+            carte.setCaseContenu(newX,newY,getSymbole());
             // Vérifier si la case contient un arbre
             if (carte.estCaseAvecArbre(newX, newY)) {
                 setPosition(newX, newY);
